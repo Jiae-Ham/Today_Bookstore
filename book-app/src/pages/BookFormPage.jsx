@@ -152,9 +152,9 @@ function BookFormPage() {
           {/* 표지 미리보기 */}
           <div style={{
             width: 200, height: 280,
-            background: '#f0f0f0',
-            border: '2px dashed #ccc',
-            borderRadius: 8,
+            background: 'rgba(255,255,255,0.5)',
+            border: '2px dashed rgba(255,255,255,0.8)',
+            borderRadius: 12,
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',
@@ -175,7 +175,8 @@ function BookFormPage() {
               value={apiKey}
               onChange={(e) => setApiKey(e.target.value)}
               placeholder="sk-..."
-              style={{ width: '100%', padding: '7px 10px', border: '1px solid #ddd', borderRadius: 6, fontSize: '0.85rem' }}
+              className="form-input"
+              style={{ width: '100%', padding: '7px 10px', fontSize: '0.85rem' }}
             />
           </div>
 
@@ -185,7 +186,8 @@ function BookFormPage() {
             <select
               value={model}
               onChange={(e) => setModel(e.target.value)}
-              style={{ width: '100%', padding: '7px 10px', border: '1px solid #ddd', borderRadius: 6, fontSize: '0.85rem' }}
+              className="form-input"
+              style={{ width: '100%', padding: '7px 10px', fontSize: '0.85rem' }}
             >
               {MODELS.map((m) => <option key={m} value={m}>{m}</option>)}
             </select>
@@ -200,14 +202,16 @@ function BookFormPage() {
                   key={q}
                   onClick={() => setQuality(q)}
                   style={{
-                    flex: 1, padding: '6px 0',
-                    border: '1px solid #ddd',
-                    borderRadius: 6,
+                    flex: 1, padding: '8px 0',
+                    border: '1px solid rgba(255,255,255,0.8)',
+                    borderRadius: 30,
                     cursor: 'pointer',
-                    fontSize: '0.8rem',
-                    background: quality === q ? '#2c3e50' : 'white',
-                    color: quality === q ? 'white' : '#333',
-                    fontWeight: quality === q ? 600 : 400,
+                    fontSize: '0.85rem',
+                    background: quality === q ? 'linear-gradient(135deg, var(--primary-color), var(--secondary-color))' : 'rgba(255,255,255,0.6)',
+                    color: quality === q ? 'white' : 'var(--text-main)',
+                    fontWeight: quality === q ? 600 : 500,
+                    boxShadow: quality === q ? '0 4px 10px rgba(102, 126, 234, 0.4)' : 'none',
+                    transition: 'all 0.2s'
                   }}
                 >
                   {q}
@@ -247,8 +251,7 @@ function BookFormPage() {
 
           <div className="form-group">
             <label>카테고리</label>
-            <select value={category} onChange={(e) => setCategory(e.target.value)}
-              style={{ width: '100%', padding: '10px 12px', border: '1px solid #ddd', borderRadius: 6, fontSize: '0.95rem' }}>
+            <select className="form-input" value={category} onChange={(e) => setCategory(e.target.value)}>
               {CATEGORIES.map((c) => <option key={c} value={c}>{c}</option>)}
             </select>
           </div>

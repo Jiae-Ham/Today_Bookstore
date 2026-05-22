@@ -45,13 +45,16 @@ function BookListPage() {
             key={cat}
             onClick={() => setSelectedCategory(cat)}
             style={{
-              padding: '6px 16px',
-              borderRadius: 20,
-              border: '1px solid #ddd',
+              padding: '8px 20px',
+              borderRadius: 30,
+              border: '1px solid rgba(255,255,255,0.8)',
               cursor: 'pointer',
-              background: selectedCategory === cat ? '#2c3e50' : 'white',
-              color: selectedCategory === cat ? 'white' : '#333',
-              fontWeight: selectedCategory === cat ? 600 : 400,
+              background: selectedCategory === cat ? 'linear-gradient(135deg, var(--primary-color), var(--secondary-color))' : 'rgba(255,255,255,0.6)',
+              color: selectedCategory === cat ? 'white' : 'var(--text-main)',
+              fontWeight: selectedCategory === cat ? 600 : 500,
+              boxShadow: selectedCategory === cat ? '0 4px 10px rgba(102, 126, 234, 0.4)' : '0 2px 5px rgba(0,0,0,0.05)',
+              transition: 'all 0.2s',
+              backdropFilter: 'blur(10px)',
             }}
           >
             {cat}

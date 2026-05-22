@@ -194,11 +194,12 @@ function BookDetailPage() {
                 {deletingReviewId === r.id && (
                   <div style={{ display: 'flex', gap: 8, marginTop: 8, alignItems: 'center' }}>
                     <input
+                      className="form-input"
                       type="password"
                       placeholder="비밀번호 입력"
                       value={deletePassword}
                       onChange={(e) => setDeletePassword(e.target.value)}
-                      style={{ flex: 1, padding: '6px 10px', border: '1px solid #ddd', borderRadius: 6, fontSize: '0.85rem' }}
+                      style={{ flex: 1, padding: '6px 10px', fontSize: '0.85rem' }}
                     />
                     <button className="btn btn-danger" style={{ padding: '6px 14px', fontSize: '0.85rem' }} onClick={() => handleReviewDelete(r.id)}>확인</button>
                     <button className="btn btn-secondary" style={{ padding: '6px 14px', fontSize: '0.85rem' }} onClick={() => { setDeletingReviewId(null); setDeletePassword(''); }}>취소</button>
@@ -212,9 +213,9 @@ function BookDetailPage() {
         {/* 리뷰 작성 폼 */}
         <h4 style={{ marginBottom: 12 }}>리뷰 작성</h4>
         <div style={{ display: 'flex', gap: 8, marginBottom: 8 }}>
-          <input className="form-input" style={{ flex: 1, padding: '8px 12px', border: '1px solid #ddd', borderRadius: 6 }}
+          <input className="form-input" style={{ flex: 1 }}
             placeholder="닉네임" value={nickname} onChange={(e) => setNickname(e.target.value)} />
-          <input className="form-input" style={{ flex: 1, padding: '8px 12px', border: '1px solid #ddd', borderRadius: 6 }}
+          <input className="form-input" style={{ flex: 1 }}
             placeholder="삭제용 비밀번호" type="password" value={password} onChange={(e) => setPassword(e.target.value)} />
         </div>
         <div style={{ marginBottom: 8 }}>
@@ -224,7 +225,7 @@ function BookDetailPage() {
               onClick={() => setRating(n)}>★</span>
           ))}
         </div>
-        <textarea style={{ width: '100%', padding: '8px 12px', border: '1px solid #ddd', borderRadius: 6, fontFamily: 'inherit', resize: 'vertical' }}
+        <textarea className="form-input" style={{ width: '100%', resize: 'vertical' }}
           rows={3} placeholder="리뷰 내용을 입력하세요" value={content} onChange={(e) => setContent(e.target.value)} />
         {reviewError && <p style={{ color: '#e74c3c', fontSize: '0.9rem', margin: '6px 0' }}>{reviewError}</p>}
         <button className="btn btn-primary" style={{ marginTop: 8 }} onClick={handleReviewSubmit}>등록</button>
