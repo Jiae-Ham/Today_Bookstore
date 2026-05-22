@@ -2,11 +2,23 @@ import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { getBooks } from '../api/books';
 
-const CATEGORIES = ['전체', '000 총류', '100 철학', '200 종교', '300 사회과학', '400 자연과학', '500 기술과학', '600 예술', '700 언어', '800 문학'];
+const CATEGORIES = [
+  '전체',
+  '000 총류',
+  '100 철학',
+  '200 종교',
+  '300 사회과학',
+  '400 자연과학',
+  '500 기술과학',
+  '600 예술',
+  '700 언어',
+  '800 문학',
+];
 
 function BookListPage() {
   const [books, setBooks] = useState([]);
   const [selectedCategory, setSelectedCategory] = useState('전체');
+  const [sortType, setSortType] = useState('review');
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
   const navigate = useNavigate();
@@ -24,15 +36,29 @@ function BookListPage() {
         setLoading(false);
       }
     }
+
     fetchBooks();
   }, []);
 
-  const filtered = selectedCategory === '전체'
-    ? books
-    : books.filter((b) => b.category === selectedCategory);
+  const filtered =
+    selectedCategory === '전체'
+      ? books
+      : books.filter((b) => b.category === selectedCategory);
+
+  const sortedBooks = [...filtered].sort((a, b) => {
+    if (sortType === 'review') {
+      return (b.reviewCount || 0) - (a.reviewCount || 0);
+    }
+
+    if (sortType === 'date') {
+      return new Date(b.createdAt) - new Date(a.createdAt);
+    }
+
+    return 0;
+  });
 
   if (loading) return <p className="empty">불러오는 중...</p>;
-  if (error)   return <p className="empty" style={{ color: '#e74c3c' }}>{error}</p>;
+  if (error) return <p className="empty" style={{ color: '#e74c3c' }}>{error}</p>;
 
   return (
     <div>
@@ -49,10 +75,16 @@ function BookListPage() {
               borderRadius: 30,
               border: '1px solid rgba(255,255,255,0.8)',
               cursor: 'pointer',
-              background: selectedCategory === cat ? 'linear-gradient(135deg, var(--primary-color), var(--secondary-color))' : 'rgba(255,255,255,0.6)',
+              background:
+                selectedCategory === cat
+                  ? 'linear-gradient(135deg, var(--primary-color), var(--secondary-color))'
+                  : 'rgba(255,255,255,0.6)',
               color: selectedCategory === cat ? 'white' : 'var(--text-main)',
               fontWeight: selectedCategory === cat ? 600 : 500,
-              boxShadow: selectedCategory === cat ? '0 4px 10px rgba(102, 126, 234, 0.4)' : '0 2px 5px rgba(0,0,0,0.05)',
+              boxShadow:
+                selectedCategory === cat
+                  ? '0 4px 10px rgba(102, 126, 234, 0.4)'
+                  : '0 2px 5px rgba(0,0,0,0.05)',
               transition: 'all 0.2s',
               backdropFilter: 'blur(10px)',
             }}
@@ -62,28 +94,110 @@ function BookListPage() {
         ))}
       </div>
 
-      {filtered.length === 0 ? (
+      {/* 정렬 버튼 */}
+      <div
+        style={{
+          display: 'flex',
+          justifyContent: 'flex-end',
+          marginBottom: '20px',
+        }}
+      >
+        <div
+          style={{
+            display: 'flex',
+            alignItems: 'center',
+            gap: '10px',
+            padding: '10px 16px',
+            borderRadius: '20px',
+            background: 'rgba(255,255,255,0.55)',
+            backdropFilter: 'blur(10px)',
+            border: '1px dashed rgba(118,75,162,0.4)',
+            boxShadow: '0 4px 12px rgba(0,0,0,0.05)',
+          }}
+        >
+          <span
+            style={{
+              fontSize: '0.9rem',
+              fontWeight: '600',
+              color: '#555',
+            }}
+          >
+            정렬 기준
+          </span>
+
+          <button
+            onClick={() => setSortType('review')}
+            style={{
+              padding: '8px 18px',
+              borderRadius: '20px',
+              border: 'none',
+              cursor: 'pointer',
+              fontWeight: '600',
+              background:
+                sortType === 'review'
+                  ? 'linear-gradient(135deg, var(--primary-color), var(--secondary-color))'
+                  : 'rgba(255,255,255,0.7)',
+              color: sortType === 'review' ? '#fff' : '#555',
+              boxShadow:
+                sortType === 'review'
+                  ? '0 4px 12px rgba(102,126,234,0.4)'
+                  : 'none',
+            }}
+          >
+            💬 리뷰순
+          </button>
+
+          <button
+            onClick={() => setSortType('date')}
+            style={{
+              padding: '8px 18px',
+              borderRadius: '20px',
+              border: 'none',
+              cursor: 'pointer',
+              fontWeight: '600',
+              background:
+                sortType === 'date'
+                  ? 'linear-gradient(135deg, var(--primary-color), var(--secondary-color))'
+                  : 'rgba(255,255,255,0.7)',
+              color: sortType === 'date' ? '#fff' : '#555',
+              boxShadow:
+                sortType === 'date'
+                  ? '0 4px 12px rgba(102,126,234,0.4)'
+                  : 'none',
+            }}
+          >
+            📅 날짜순
+          </button>
+        </div>
+      </div>
+
+      {sortedBooks.length === 0 ? (
         <p className="empty">해당 카테고리의 도서가 없습니다.</p>
       ) : (
         <div className="book-grid">
-          {filtered.map((book) => (
+          {sortedBooks.map((book) => (
             <div
               key={book.id}
               className="book-card"
               onClick={() => navigate(`/books/${book.id}`)}
             >
               <div className="book-card-cover">
-                {book.coverImageUrl
-                  ? <img src={book.coverImageUrl} alt={book.title} />
-                  : '📖'
-                }
+                {book.coverImageUrl ? (
+                  <img src={book.coverImageUrl} alt={book.title} />
+                ) : (
+                  '📖'
+                )}
               </div>
+
               <div className="book-card-body">
                 <h3>{book.title}</h3>
                 <p>{book.author}</p>
+
                 <p style={{ fontSize: '0.8rem', color: '#f5a623' }}>
-                  {'⭐'.repeat(Math.round(book.avg_rating))} {book.avg_rating > 0 ? book.avg_rating.toFixed(1) : ''}
+                  {'⭐'.repeat(Math.round(book.avg_rating || 0))}{' '}
+                  {book.avg_rating > 0 ? book.avg_rating.toFixed(1) : ''}
                 </p>
+
                 <p style={{ fontSize: '0.75rem', color: '#bbb', marginTop: 4 }}>
                   {new Date(book.createdAt).toLocaleDateString('ko-KR')}
                 </p>
