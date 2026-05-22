@@ -20,7 +20,7 @@ function BookFormPage() {
 
   // AI 이미지 관련 상태
   const [coverImageUrl, setCoverImageUrl] = useState('');
-  const [apiKey, setApiKey] = useState('');
+  const [apiKey, setApiKey] = useState(import.meta.env.VITE_OPENAI_API_KEY || '');
   const [model, setModel] = useState(MODELS[0]);
   const [quality, setQuality] = useState('low');
   const [generating, setGenerating] = useState(false);
