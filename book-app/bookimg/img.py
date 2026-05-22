@@ -6,19 +6,19 @@ import urllib.error
 import time
 
 def main():
-    # Resolve paths relative to this script
     script_dir = os.path.dirname(os.path.abspath(__file__))
     project_dir = os.path.dirname(script_dir)
     env_path = os.path.join(project_dir, '.env')
     db_path = os.path.join(project_dir, 'db.json')
+    image_dir = os.path.join(project_dir, 'public', 'bookimg')
 
     print(f"Project directory: {project_dir}")
     print(f"Loading environment from: {env_path}")
     print(f"Database file path: {db_path}")
-    print(f"Image directory (where files are saved): {script_dir}")
+    print(f"Image directory (where files are saved): {image_dir}")
 
     # Ensure the image directory exists (should exist already, but good practice)
-    os.makedirs(script_dir, exist_ok=True)
+    os.makedirs(image_dir, exist_ok=True)
 
     # Load API Key from .env
     api_key = None
@@ -73,7 +73,7 @@ def main():
 
         # Filename configuration
         filename = f"book_{book_id}.png"
-        local_file_path = os.path.join(script_dir, filename)
+        local_file_path = os.path.join(image_dir, filename)
         db_url_reference = f"/bookimg/{filename}"
 
         print(f"\n[{idx+1}/{len(books)}] Book ID: {book_id} | Title: '{title}'")
