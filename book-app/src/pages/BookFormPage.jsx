@@ -48,9 +48,66 @@ function BookFormPage() {
     if (!apiKey.trim()) { alert('API 키를 입력해주세요.'); return; }
     if (!title.trim() && !content.trim()) { alert('제목 또는 내용을 먼저 입력해주세요.'); return; }
     setGenerating(true);
-    // TODO: OpenAI API 호출 (AI 담당자 구현 예정)
     // prompt 예시: `A book cover for "${title}". ${content}`
-    setTimeout(() => setGenerating(false), 2000); // 임시 딜레이
+    //setTimeout(() => setGenerating(false), 2000); // 임시 딜레이
+    try {
+      const prompt = `책의 표지를 그릴 것이다. "${title}"라는 제목을 그림에 반드시 작성해라. 또한, 책의 내용: "${content}" 을(를) 읽고, 해당 책의 내용과 어울리는 표지를 그려라`;
+      
+      const OPENAI_IMAGE_API_URL = 'https://api.openai.com/v1/images/generations';
+      
+      const res = await fetch(OPENAI_IMAGE_API_URL, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${apiKey}`,
+        },
+        body: JSON.stringify({
+          model: model,
+          prompt,
+          n: 1,
+          size: '1024x1536',
+          quality: quality,
+          output_format: 'png',
+          // response_format: 'b64_json'
+        }),
+      });
+
+      if (!res.ok) {
+        const errorData = await res.json();
+        console.error("OpenAI 에러 상세:", errorData); // F12 콘솔창에 자세한 에러 기록
+        throw new Error(`요청 실패 사유: ${errorData.error?.message || '알 수 없는 에러'}`);
+      }
+
+      const data = await res.json();
+      const b64Json = data.data?.[0]?.b64_json;
+      const imageSrc = `data:image/png;base64,${b64Json}`;
+
+      const testimageUrl = data.data[0].url;
+      
+
+      setCoverImageUrl(imageSrc);
+      const updateRes = await fetch(`http://localhost:3000/books/${id}`, {
+        method: 'PATCH',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          coverImageUrl: imageSrc, // base64 문자열을 저장
+        }),
+      });
+
+      if (!updateRes.ok) {
+        throw new Error('데이터베이스 저장에 실패했습니다.');
+      }
+
+      alert('AI 표지 생성 및 DB 저장이 완료되었습니다!');
+
+    } catch (error) {
+      console.error(error);
+      alert('에러: ' + error.message);
+    } finally {
+      setGenerating(false); // 기존의 임시 딜레이 대신, 여기서 정상적으로 로딩 상태를 해제합니다.
+    }
   };
 
   const handleSubmit = async () => {
