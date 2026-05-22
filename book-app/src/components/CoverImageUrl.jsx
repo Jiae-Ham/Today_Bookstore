@@ -94,7 +94,7 @@ function CoverImageUrl({ book, setBooks }) {
         <option value="medium">화질 선택: Medium</option>
         <option value="high">화질 선택: High</option>
       </select>
-      <button onClick={handleGenerateCover} disabled={isLoading}> // 작동중이면 버튼 여러번 못누르게
+      <button onClick={handleGenerateCover} disabled={isLoading}>
         {isLoading ? '이미지 생성 중...' : 'AI 표지 생성'}
       </button>
     </>
