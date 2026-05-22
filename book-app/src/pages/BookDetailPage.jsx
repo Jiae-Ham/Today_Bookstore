@@ -1,94 +1,234 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-
-// Mock 데이터 (1일차 - json-server 연동 전)
-const MOCK_BOOKS = [
-  {
-    id: 1,
-    title: '별빛 아래의 서점',
-    author: '홍길동',
-    content: '작은 마을 서점의 1년을 담은 에세이. 책과 사람, 그리고 계절의 이야기.',
-    coverImageUrl: '',
-    createdAt: '2026-05-01T09:00:00.000Z',
-    updatedAt: '2026-05-01T09:00:00.000Z',
-  },
-  {
-    id: 2,
-    title: '우주의 끝에서',
-    author: '이영희',
-    content: '광활한 우주를 배경으로 펼쳐지는 SF 소설. 인간과 AI의 공존을 탐구한다.',
-    coverImageUrl: '',
-    createdAt: '2026-05-10T11:00:00.000Z',
-    updatedAt: '2026-05-10T11:00:00.000Z',
-  },
-  {
-    id: 3,
-    title: '봄날의 레시피',
-    author: '김민수',
-    content: '요리와 함께하는 따뜻한 일상 에세이. 계절마다 달라지는 식탁의 이야기.',
-    coverImageUrl: '',
-    createdAt: '2026-05-15T14:00:00.000Z',
-    updatedAt: '2026-05-15T14:00:00.000Z',
-  },
-];
+import { getBook, getBooks, updateBook, deleteBook } from '../api/books';
+import { getReviews, createReview, deleteReview } from '../api/reviews';
 
 function BookDetailPage() {
   const { id } = useParams();
   const navigate = useNavigate();
-  const [book] = useState(
-    MOCK_BOOKS.find((b) => b.id === Number(id)) || null
-  );
+  const [book, setBook] = useState(null);
+  const [reviews, setReviews] = useState([]);
+  const [allBooks, setAllBooks] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState('');
 
-  if (!book) {
-    return (
-      <div className="empty">
-        <p>도서를 찾을 수 없습니다.</p>
-        <button className="btn btn-secondary" style={{ marginTop: 16 }} onClick={() => navigate('/')}>
-          목록으로
-        </button>
-      </div>
-    );
-  }
+  // 리뷰 작성 폼 상태
+  const [nickname, setNickname] = useState('');
+  const [password, setPassword] = useState('');
+  const [rating, setRating] = useState(5);
+  const [content, setContent] = useState('');
+  const [reviewError, setReviewError] = useState('');
 
-  const handleDelete = () => {
-    if (window.confirm(`"${book.title}"을(를) 삭제하시겠습니까?`)) {
-      // TODO: DELETE /books/:id (2일차 연동 예정)
-      alert('삭제 기능은 2일차에 연동합니다.');
+  useEffect(() => {
+    async function fetchData() {
+      try {
+        const [bookRes, reviewRes, allBooksRes] = await Promise.all([
+          getBook(id),
+          getReviews(id),
+          getBooks(),
+        ]);
+        if (!bookRes.ok) throw new Error('도서를 찾을 수 없습니다.');
+        setBook(await bookRes.json());
+        setReviews(await reviewRes.json());
+        setAllBooks(await allBooksRes.json());
+      } catch (err) {
+        setError(err.message);
+      } finally {
+        setLoading(false);
+      }
+    }
+    fetchData();
+  }, [id]);
+
+  // rate_point 재계산 후 books에 PATCH
+  const updateRatePoint = async (updatedReviews) => {
+    if (updatedReviews.length === 0) {
+      await updateBook(id, { avg_rating: 0, rate_point: 0 });
+      setBook((prev) => ({ ...prev, avg_rating: 0, rate_point: 0 }));
+      return;
+    }
+
+    // avg_rating: 단순 평균 (화면 표시용)
+    const ratingSum = updatedReviews.reduce((sum, r) => sum + r.rating, 0);
+    const avgRating = Math.round((ratingSum / updatedReviews.length) * 10) / 10;
+
+    // rate_point: 베이지안 평균 (추천 정렬용)
+    // 공식: (전체 평균 × 최소 리뷰수 + 해당 도서 별점 합계) / (최소 리뷰수 + 해당 도서 리뷰수)
+    const C = 5; // 최소 기준 리뷰 수
+    const booksWithRatings = allBooks.filter((b) => b.avg_rating > 0);
+    const m = booksWithRatings.length > 0
+      ? booksWithRatings.reduce((sum, b) => sum + b.avg_rating, 0) / booksWithRatings.length
+      : 3.5; // 전체 평균 없으면 중간값
+    const bayesian = Math.round(((C * m + ratingSum) / (C + updatedReviews.length)) * 10) / 10;
+
+    await updateBook(id, { avg_rating: avgRating, rate_point: bayesian });
+    setBook((prev) => ({ ...prev, avg_rating: avgRating, rate_point: bayesian }));
+  };
+
+  const handleDelete = async () => {
+    if (!window.confirm(`"${book.title}"을(를) 삭제하시겠습니까?`)) return;
+    try {
+      const res = await deleteBook(id);
+      if (!res.ok) throw new Error('삭제에 실패했습니다.');
+      navigate('/');
+    } catch (err) {
+      alert(err.message);
     }
   };
 
+  const handleReviewSubmit = async () => {
+    if (!nickname.trim()) { setReviewError('닉네임을 입력해주세요.'); return; }
+    if (!password.trim()) { setReviewError('비밀번호를 입력해주세요.'); return; }
+    if (!content.trim())  { setReviewError('내용을 입력해주세요.'); return; }
+    setReviewError('');
+
+    try {
+      const res = await createReview({
+        bookId: Number(id),
+        nickname,
+        password,
+        rating,
+        content,
+        createdAt: new Date().toISOString(),
+      });
+      if (!res.ok) throw new Error('리뷰 등록에 실패했습니다.');
+      const newReview = await res.json();
+      const updatedReviews = [...reviews, newReview];
+      setReviews(updatedReviews);
+      await updateRatePoint(updatedReviews);
+      setNickname(''); setPassword(''); setRating(5); setContent('');
+    } catch (err) {
+      setReviewError(err.message);
+    }
+  };
+
+  const handleReviewDelete = async (reviewId) => {
+    const pw = window.prompt('비밀번호를 입력하세요.');
+    if (pw === null) return;
+    const target = reviews.find((r) => r.id === reviewId);
+    if (target.password !== pw) { alert('비밀번호가 틀렸습니다.'); return; }
+
+    try {
+      const res = await deleteReview(reviewId);
+      if (!res.ok) throw new Error('삭제에 실패했습니다.');
+      const updatedReviews = reviews.filter((r) => r.id !== reviewId);
+      setReviews(updatedReviews);
+      await updateRatePoint(updatedReviews);
+    } catch (err) {
+      alert(err.message);
+    }
+  };
+
+  if (loading) return <p className="empty">불러오는 중...</p>;
+  if (error) return (
+    <div className="empty">
+      <p style={{ color: '#e74c3c' }}>{error}</p>
+      <button className="btn btn-secondary" style={{ marginTop: 16 }} onClick={() => navigate('/')}>목록으로</button>
+    </div>
+  );
+
   return (
-    <div className="book-detail">
-      <div className="book-detail-cover">
-        {book.coverImageUrl
-          ? <img src={book.coverImageUrl} alt={book.title} />
-          : '📖'
-        }
+    <div>
+      <div className="book-detail">
+        <div className="book-detail-cover">
+          {book.coverImageUrl ? <img src={book.coverImageUrl} alt={book.title} /> : '📖'}
+        </div>
+
+        <h2>{book.title}</h2>
+        <p className="author">저자: {book.author} · 장르: {book.category}</p>
+        <p style={{ color: '#f5a623', marginBottom: 8 }}>
+          ⭐ {book.avg_rating > 0 ? book.avg_rating.toFixed(1) : '평점 없음'} ({reviews.length}개 리뷰)
+        </p>
+        <p className="content">{book.content}</p>
+        <p className="dates">
+          등록일: {new Date(book.createdAt).toLocaleDateString('ko-KR')}
+          &nbsp;·&nbsp;
+          수정일: {new Date(book.updatedAt).toLocaleDateString('ko-KR')}
+        </p>
+
+        <div className="btn-row">
+          <button className="btn btn-secondary" onClick={() => navigate('/')}>목록으로</button>
+          <button className="btn btn-primary" onClick={() => navigate(`/books/${book.id}/edit`)}>수정</button>
+          <button className="btn btn-danger" onClick={handleDelete}>삭제</button>
+          <button className="btn btn-success" onClick={() => alert('AI 표지 생성은 3일차에 연동합니다.')}>AI 표지 생성</button>
+        </div>
       </div>
 
-      <h2>{book.title}</h2>
-      <p className="author">저자: {book.author}</p>
-      <p className="content">{book.content}</p>
-      <p className="dates">
-        등록일: {new Date(book.createdAt).toLocaleString('ko-KR')}
-        &nbsp;·&nbsp;
-        수정일: {new Date(book.updatedAt).toLocaleString('ko-KR')}
-      </p>
+      {/* 리뷰 섹션 */}
+      <div className="book-detail" style={{ marginTop: 24 }}>
+        <h3 style={{ marginBottom: 16 }}>리뷰 ({reviews.length})</h3>
 
-      <div className="btn-row">
-        <button className="btn btn-secondary" onClick={() => navigate('/')}>
-          목록으로
-        </button>
-        <button className="btn btn-primary" onClick={() => navigate(`/books/${book.id}/edit`)}>
-          수정
-        </button>
-        <button className="btn btn-danger" onClick={handleDelete}>
-          삭제
-        </button>
-        <button className="btn btn-success" onClick={() => alert('AI 표지 생성은 3일차에 연동합니다.')}>
-          AI 표지 생성
-        </button>
+        {/* 리뷰 목록 */}
+        {reviews.length === 0 ? (
+          <p style={{ color: '#aaa', marginBottom: 24 }}>아직 리뷰가 없습니다.</p>
+        ) : (
+          <ul style={{ listStyle: 'none', marginBottom: 24 }}>
+            {reviews.map((r) => (
+              <li key={r.id} style={{ borderBottom: '1px solid #eee', padding: '12px 0' }}>
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                  <span style={{ fontWeight: 600 }}>{r.nickname}</span>
+                  <div style={{ display: 'flex', gap: 8, alignItems: 'center' }}>
+                    <span style={{ color: '#f5a623' }}>{'⭐'.repeat(r.rating)}</span>
+                    <button className="btn btn-danger" style={{ padding: '4px 10px', fontSize: '0.8rem' }} onClick={() => handleReviewDelete(r.id)}>삭제</button>
+                  </div>
+                </div>
+                <p style={{ marginTop: 6, color: '#555' }}>{r.content}</p>
+                <p style={{ fontSize: '0.75rem', color: '#bbb', marginTop: 4 }}>{new Date(r.createdAt).toLocaleDateString('ko-KR')}</p>
+              </li>
+            ))}
+          </ul>
+        )}
+
+        {/* 리뷰 작성 폼 */}
+        <h4 style={{ marginBottom: 12 }}>리뷰 작성</h4>
+        <div style={{ display: 'flex', gap: 8, marginBottom: 8 }}>
+          <input className="form-input" style={{ flex: 1, padding: '8px 12px', border: '1px solid #ddd', borderRadius: 6 }}
+            placeholder="닉네임" value={nickname} onChange={(e) => setNickname(e.target.value)} />
+          <input className="form-input" style={{ flex: 1, padding: '8px 12px', border: '1px solid #ddd', borderRadius: 6 }}
+            placeholder="삭제용 비밀번호" type="password" value={password} onChange={(e) => setPassword(e.target.value)} />
+        </div>
+        <div style={{ marginBottom: 8 }}>
+          <span style={{ marginRight: 8, fontSize: '0.9rem' }}>별점:</span>
+          {[1, 2, 3, 4, 5].map((n) => (
+            <span key={n} style={{ cursor: 'pointer', fontSize: '1.3rem', color: n <= rating ? '#f5a623' : '#ddd' }}
+              onClick={() => setRating(n)}>★</span>
+          ))}
+        </div>
+        <textarea style={{ width: '100%', padding: '8px 12px', border: '1px solid #ddd', borderRadius: 6, fontFamily: 'inherit', resize: 'vertical' }}
+          rows={3} placeholder="리뷰 내용을 입력하세요" value={content} onChange={(e) => setContent(e.target.value)} />
+        {reviewError && <p style={{ color: '#e74c3c', fontSize: '0.9rem', margin: '6px 0' }}>{reviewError}</p>}
+        <button className="btn btn-primary" style={{ marginTop: 8 }} onClick={handleReviewSubmit}>등록</button>
       </div>
+
+      {/* 연관 도서 추천 */}
+      {(() => {
+        const related = allBooks
+          .filter((b) => b.category === book.category && b.id !== book.id)
+          .sort((a, b) => b.rate_point - a.rate_point)
+          .slice(0, 3);
+        if (related.length === 0) return null;
+        return (
+          <div className="book-detail" style={{ marginTop: 24 }}>
+            <h3 style={{ marginBottom: 16 }}>같은 장르 추천 도서 ({book.category})</h3>
+            <div className="book-grid">
+              {related.map((b) => (
+                <div key={b.id} className="book-card" onClick={() => navigate(`/books/${b.id}`)}>
+                  <div className="book-card-cover">
+                    {b.coverImageUrl ? <img src={b.coverImageUrl} alt={b.title} /> : '📖'}
+                  </div>
+                  <div className="book-card-body">
+                    <h3>{b.title}</h3>
+                    <p>{b.author}</p>
+                    <p style={{ fontSize: '0.8rem', color: '#f5a623' }}>
+                      ⭐ {b.avg_rating > 0 ? b.avg_rating.toFixed(1) : '평점 없음'}
+                    </p>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        );
+      })()}
     </div>
   );
 }
