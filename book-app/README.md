@@ -17,6 +17,11 @@ npm install
 
 **2. 터미널 2개 열어서 각각 실행**
 
+#경로설정
+```
+cd book-app
+```
+
 ```
 # 터미널 1 - json-server (데이터 서버)
 npx json-server@0.17.4 --watch db.json --port 3000
