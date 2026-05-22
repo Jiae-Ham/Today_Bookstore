@@ -19,6 +19,10 @@ function BookDetailPage() {
   const [content, setContent] = useState('');
   const [reviewError, setReviewError] = useState('');
 
+  // 리뷰 삭제 인라인 상태
+  const [deletingReviewId, setDeletingReviewId] = useState(null);
+  const [deletePassword, setDeletePassword] = useState('');
+
   useEffect(() => {
     async function fetchData() {
       try {
@@ -103,10 +107,8 @@ function BookDetailPage() {
   };
 
   const handleReviewDelete = async (reviewId) => {
-    const pw = window.prompt('비밀번호를 입력하세요.');
-    if (pw === null) return;
     const target = reviews.find((r) => r.id === reviewId);
-    if (target.password !== pw) { alert('비밀번호가 틀렸습니다.'); return; }
+    if (target.password !== deletePassword) { alert('비밀번호가 틀렸습니다.'); return; }
 
     try {
       const res = await deleteReview(reviewId);
@@ -114,6 +116,8 @@ function BookDetailPage() {
       const updatedReviews = reviews.filter((r) => r.id !== reviewId);
       setReviews(updatedReviews);
       await updateRatePoint(updatedReviews);
+      setDeletingReviewId(null);
+      setDeletePassword('');
     } catch (err) {
       alert(err.message);
     }
@@ -168,11 +172,38 @@ function BookDetailPage() {
                   <span style={{ fontWeight: 600 }}>{r.nickname}</span>
                   <div style={{ display: 'flex', gap: 8, alignItems: 'center' }}>
                     <span style={{ color: '#f5a623' }}>{'⭐'.repeat(r.rating)}</span>
-                    <button className="btn btn-danger" style={{ padding: '4px 10px', fontSize: '0.8rem' }} onClick={() => handleReviewDelete(r.id)}>삭제</button>
+                    <button
+                      className="btn btn-danger"
+                      style={{ padding: '4px 10px', fontSize: '0.8rem' }}
+                      onClick={() => {
+                        if (deletingReviewId === r.id) {
+                          setDeletingReviewId(null);
+                          setDeletePassword('');
+                        } else {
+                          setDeletingReviewId(r.id);
+                          setDeletePassword('');
+                        }
+                      }}
+                    >
+                      삭제
+                    </button>
                   </div>
                 </div>
-                <p style={{ marginTop: 6, color: '#555' }}>{r.content}</p>
+                <p style={{ marginTop: 6, color: '#555', fontSize: '0.9rem', textAlign: 'left' }}>{r.content}</p>
                 <p style={{ fontSize: '0.75rem', color: '#bbb', marginTop: 4 }}>{new Date(r.createdAt).toLocaleDateString('ko-KR')}</p>
+                {deletingReviewId === r.id && (
+                  <div style={{ display: 'flex', gap: 8, marginTop: 8, alignItems: 'center' }}>
+                    <input
+                      type="password"
+                      placeholder="비밀번호 입력"
+                      value={deletePassword}
+                      onChange={(e) => setDeletePassword(e.target.value)}
+                      style={{ flex: 1, padding: '6px 10px', border: '1px solid #ddd', borderRadius: 6, fontSize: '0.85rem' }}
+                    />
+                    <button className="btn btn-danger" style={{ padding: '6px 14px', fontSize: '0.85rem' }} onClick={() => handleReviewDelete(r.id)}>확인</button>
+                    <button className="btn btn-secondary" style={{ padding: '6px 14px', fontSize: '0.85rem' }} onClick={() => { setDeletingReviewId(null); setDeletePassword(''); }}>취소</button>
+                  </div>
+                )}
               </li>
             ))}
           </ul>

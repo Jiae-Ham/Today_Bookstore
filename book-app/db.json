@@ -19,8 +19,8 @@
       "content": "112123123",
       "category": "500 기술과학",
       "coverImageUrl": "",
-      "avg_rating": 0,
-      "rate_point": 0,
+      "avg_rating": 5,
+      "rate_point": 4.3,
       "createdAt": "2026-05-22T04:22:25.351Z",
       "updatedAt": "2026-05-22T05:27:35.551Z"
     },
@@ -244,6 +244,15 @@
       "content": "1234",
       "createdAt": "2026-05-22T04:57:35.302Z",
       "id": 33
+    },
+    {
+      "bookId": 5,
+      "nickname": "213",
+      "password": "123213",
+      "rating": 5,
+      "content": "12321312323",
+      "createdAt": "2026-05-22T05:39:32.992Z",
+      "id": 35
     }
   ]
 }
