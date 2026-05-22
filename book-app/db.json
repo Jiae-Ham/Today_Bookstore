@@ -4,37 +4,25 @@
       "id": 3,
       "title": "봄날의 레시피1",
       "author": "김민수12",
-      "content": "요리와 함께하는 따뜻한 일상 에세이. 계절마다 달라지는 식탁의 이야기.11",
+      "content": "요리와 함께하는 따뜻한 일상 에세이. 계절마다 달라지는 식탁의 이야기.11ㅁㄴㅇ",
       "category": "800 문학",
       "coverImageUrl": "",
       "avg_rating": 0,
       "rate_point": 0,
       "createdAt": "2026-05-15T14:00:00.000Z",
-      "updatedAt": "2026-05-22T04:45:23.186Z"
-    },
-    {
-      "id": 4,
-      "title": "신데렐라1",
-      "author": "계모",
-      "content": "11",
-      "category": "소설",
-      "coverImageUrl": "",
-      "avg_rating": 0,
-      "rate_point": 0,
-      "createdAt": "2026-05-22T04:22:11.509Z",
-      "updatedAt": "2026-05-22T04:22:11.509Z"
+      "updatedAt": "2026-05-22T05:27:02.307Z"
     },
     {
       "id": 5,
-      "title": "개발자",
-      "author": "1",
-      "content": "112123",
-      "category": "자기계발",
+      "title": "개발자123",
+      "author": "1123",
+      "content": "112123123",
+      "category": "500 기술과학",
       "coverImageUrl": "",
       "avg_rating": 0,
       "rate_point": 0,
       "createdAt": "2026-05-22T04:22:25.351Z",
-      "updatedAt": "2026-05-22T04:22:25.351Z"
+      "updatedAt": "2026-05-22T05:27:35.551Z"
     },
     {
       "id": 6,
@@ -71,6 +59,18 @@
       "rate_point": 3.8,
       "createdAt": "2026-05-22T04:38:24.361Z",
       "updatedAt": "2026-05-22T04:38:24.361Z"
+    },
+    {
+      "title": "ㅁㄴㅇ",
+      "author": "ㅁㄴㅇ",
+      "content": "ㅁㄴㅇ",
+      "category": "000 총류",
+      "coverImageUrl": "",
+      "avg_rating": 0,
+      "rate_point": 0,
+      "createdAt": "2026-05-22T05:24:42.714Z",
+      "updatedAt": "2026-05-22T05:24:42.714Z",
+      "id": 9
     }
   ],
   "reviews": [

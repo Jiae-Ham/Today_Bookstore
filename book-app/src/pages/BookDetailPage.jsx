@@ -146,11 +146,10 @@ function BookDetailPage() {
           수정일: {new Date(book.updatedAt).toLocaleDateString('ko-KR')}
         </p>
 
-        <div className="btn-row">
+        <div className="btn-row" style={{ justifyContent: 'center' }}>
           <button className="btn btn-secondary" onClick={() => navigate('/')}>목록으로</button>
           <button className="btn btn-primary" onClick={() => navigate(`/books/${book.id}/edit`)}>수정</button>
           <button className="btn btn-danger" onClick={handleDelete}>삭제</button>
-          <button className="btn btn-success" onClick={() => alert('AI 표지 생성은 3일차에 연동합니다.')}>AI 표지 생성</button>
         </div>
       </div>
 
