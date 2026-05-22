@@ -1,31 +1,249 @@
 {
   "books": [
     {
-      "id": 1,
-      "title": "별빛 아래의 서점",
-      "author": "홍길동",
-      "content": "작은 마을 서점의 1년을 담은 에세이. 책과 사람, 그리고 계절의 이야기.",
+      "id": 3,
+      "title": "봄날의 레시피1",
+      "author": "김민수12",
+      "content": "요리와 함께하는 따뜻한 일상 에세이. 계절마다 달라지는 식탁의 이야기.11",
+      "category": "800 문학",
       "coverImageUrl": "",
-      "createdAt": "2026-05-01T09:00:00.000Z",
-      "updatedAt": "2026-05-01T09:00:00.000Z"
+      "avg_rating": 0,
+      "rate_point": 0,
+      "createdAt": "2026-05-15T14:00:00.000Z",
+      "updatedAt": "2026-05-22T04:45:23.186Z"
+    },
+    {
+      "id": 4,
+      "title": "신데렐라1",
+      "author": "계모",
+      "content": "11",
+      "category": "소설",
+      "coverImageUrl": "",
+      "avg_rating": 0,
+      "rate_point": 0,
+      "createdAt": "2026-05-22T04:22:11.509Z",
+      "updatedAt": "2026-05-22T04:22:11.509Z"
+    },
+    {
+      "id": 5,
+      "title": "개발자",
+      "author": "1",
+      "content": "112123",
+      "category": "자기계발",
+      "coverImageUrl": "",
+      "avg_rating": 0,
+      "rate_point": 0,
+      "createdAt": "2026-05-22T04:22:25.351Z",
+      "updatedAt": "2026-05-22T04:22:25.351Z"
+    },
+    {
+      "id": 6,
+      "title": "C++ 프로그래밍",
+      "author": "개발자",
+      "content": "프로그래밍",
+      "category": "500 기술과학",
+      "coverImageUrl": "",
+      "avg_rating": 4,
+      "rate_point": 3.1,
+      "createdAt": "2026-05-22T04:25:08.060Z",
+      "updatedAt": "2026-05-22T04:25:08.060Z"
+    },
+    {
+      "id": 7,
+      "title": "프로그래밍1",
+      "author": "123",
+      "content": "123123",
+      "category": "500 기술과학",
+      "coverImageUrl": "",
+      "avg_rating": 4.3,
+      "rate_point": 3.9,
+      "createdAt": "2026-05-22T04:36:07.812Z",
+      "updatedAt": "2026-05-22T04:36:07.812Z"
+    },
+    {
+      "id": 8,
+      "title": "프로그래밍",
+      "author": "123",
+      "content": "123123",
+      "category": "500 기술과학",
+      "coverImageUrl": "",
+      "avg_rating": 3.3,
+      "rate_point": 3.8,
+      "createdAt": "2026-05-22T04:38:24.361Z",
+      "updatedAt": "2026-05-22T04:38:24.361Z"
+    }
+  ],
+  "reviews": [
+    {
+      "id": 1,
+      "bookId": 6,
+      "nickname": "개개개",
+      "password": "1234",
+      "rating": 3,
+      "content": "123123",
+      "createdAt": "2026-05-22T04:25:37.956Z"
     },
     {
       "id": 2,
-      "title": "우주의 끝에서",
-      "author": "이영희",
-      "content": "광활한 우주를 배경으로 펼쳐지는 SF 소설. 인간과 AI의 공존을 탐구한다.",
-      "coverImageUrl": "",
-      "createdAt": "2026-05-10T11:00:00.000Z",
-      "updatedAt": "2026-05-10T11:00:00.000Z"
+      "bookId": 6,
+      "nickname": "ㅇ",
+      "password": "1234",
+      "rating": 5,
+      "content": "ㅇ",
+      "createdAt": "2026-05-22T04:26:11.826Z"
     },
     {
-      "id": 3,
-      "title": "봄날의 레시피",
-      "author": "김민수",
-      "content": "요리와 함께하는 따뜻한 일상 에세이. 계절마다 달라지는 식탁의 이야기.",
-      "coverImageUrl": "",
-      "createdAt": "2026-05-15T14:00:00.000Z",
-      "updatedAt": "2026-05-15T14:00:00.000Z"
+      "id": 7,
+      "bookId": 7,
+      "nickname": "123",
+      "password": "123",
+      "rating": 5,
+      "content": "ㅈㅂㄷ",
+      "createdAt": "2026-05-22T04:36:22.376Z"
+    },
+    {
+      "id": 14,
+      "bookId": 7,
+      "nickname": "123",
+      "password": "123",
+      "rating": 4,
+      "content": "123",
+      "createdAt": "2026-05-22T04:37:29.823Z"
+    },
+    {
+      "id": 15,
+      "bookId": 7,
+      "nickname": "123",
+      "password": "123",
+      "rating": 3,
+      "content": "123",
+      "createdAt": "2026-05-22T04:37:35.947Z"
+    },
+    {
+      "id": 17,
+      "bookId": 8,
+      "nickname": "123",
+      "password": "123",
+      "rating": 5,
+      "content": "123",
+      "createdAt": "2026-05-22T04:38:35.015Z"
+    },
+    {
+      "id": 18,
+      "bookId": 8,
+      "nickname": "123",
+      "password": "123",
+      "rating": 5,
+      "content": "123",
+      "createdAt": "2026-05-22T04:38:38.443Z"
+    },
+    {
+      "id": 19,
+      "bookId": 8,
+      "nickname": "123",
+      "password": "123",
+      "rating": 3,
+      "content": "123",
+      "createdAt": "2026-05-22T04:38:43.553Z"
+    },
+    {
+      "id": 20,
+      "bookId": 8,
+      "nickname": "123",
+      "password": "123",
+      "rating": 1,
+      "content": "123",
+      "createdAt": "2026-05-22T04:38:48.070Z"
+    },
+    {
+      "id": 21,
+      "bookId": 8,
+      "nickname": "123",
+      "password": "123",
+      "rating": 1,
+      "content": "123",
+      "createdAt": "2026-05-22T04:38:53.167Z"
+    },
+    {
+      "id": 22,
+      "bookId": 8,
+      "nickname": "123",
+      "password": "123",
+      "rating": 1,
+      "content": "123",
+      "createdAt": "2026-05-22T04:38:56.787Z"
+    },
+    {
+      "id": 23,
+      "bookId": 8,
+      "nickname": "123",
+      "password": "123",
+      "rating": 5,
+      "content": "123",
+      "createdAt": "2026-05-22T04:39:04.749Z"
+    },
+    {
+      "id": 24,
+      "bookId": 8,
+      "nickname": "123",
+      "password": "123",
+      "rating": 1,
+      "content": "123",
+      "createdAt": "2026-05-22T04:39:10.613Z"
+    },
+    {
+      "id": 25,
+      "bookId": 8,
+      "nickname": "123",
+      "password": "123",
+      "rating": 5,
+      "content": "123",
+      "createdAt": "2026-05-22T04:39:15.949Z"
+    },
+    {
+      "id": 26,
+      "bookId": 8,
+      "nickname": "123",
+      "password": "123",
+      "rating": 5,
+      "content": "123",
+      "createdAt": "2026-05-22T04:39:18.721Z"
+    },
+    {
+      "id": 27,
+      "bookId": 8,
+      "nickname": "123",
+      "password": "123",
+      "rating": 5,
+      "content": "123",
+      "createdAt": "2026-05-22T04:39:44.145Z"
+    },
+    {
+      "id": 28,
+      "bookId": 8,
+      "nickname": "123",
+      "password": "123",
+      "rating": 5,
+      "content": "123",
+      "createdAt": "2026-05-22T04:39:52.573Z"
+    },
+    {
+      "id": 31,
+      "bookId": 8,
+      "nickname": "123",
+      "password": "123",
+      "rating": 1,
+      "content": "123",
+      "createdAt": "2026-05-22T04:40:24.934Z"
+    },
+    {
+      "bookId": 7,
+      "nickname": "ㅁㄴㅇㅁㄴㅇ",
+      "password": "1234",
+      "rating": 5,
+      "content": "1234",
+      "createdAt": "2026-05-22T04:57:35.302Z",
+      "id": 33
     }
   ]
 }
