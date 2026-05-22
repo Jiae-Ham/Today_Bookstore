@@ -3,7 +3,7 @@ import { useParams, useNavigate } from 'react-router-dom';
 import { getBook, createBook, updateBook } from '../api/books';
 
 const CATEGORIES = ['000 총류', '100 철학', '200 종교', '300 사회과학', '400 자연과학', '500 기술과학', '600 예술', '700 언어', '800 문학'];
-const MODELS = ['gpt-image-2'];
+const MODEL = 'gpt-image-2';
 const QUALITIES = ['low', 'medium', 'high'];
 
 function BookFormPage() {
@@ -20,8 +20,8 @@ function BookFormPage() {
 
   // AI 이미지 관련 상태
   const [coverImageUrl, setCoverImageUrl] = useState('');
-  const [apiKey, setApiKey] = useState(import.meta.env.VITE_OPENAI_API_KEY || '');
-  const [model, setModel] = useState(MODELS[0]);
+  const [pendingImageUrl, setPendingImageUrl] = useState('');
+  const [apiKey, setApiKey] = useState('');
   const [quality, setQuality] = useState('low');
   const [generating, setGenerating] = useState(false);
 
@@ -62,7 +62,7 @@ function BookFormPage() {
           Authorization: `Bearer ${apiKey}`,
         },
         body: JSON.stringify({
-          model: model,
+          model: MODEL,
           prompt,
           n: 1,
           size: '1024x1536',
@@ -82,25 +82,7 @@ function BookFormPage() {
       const b64Json = data.data?.[0]?.b64_json;
       const imageSrc = `data:image/png;base64,${b64Json}`;
 
-      const testimageUrl = data.data[0].url;
-      
-
-      setCoverImageUrl(imageSrc);
-      const updateRes = await fetch(`http://localhost:3000/books/${id}`, {
-        method: 'PATCH',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          coverImageUrl: imageSrc, // base64 문자열을 저장
-        }),
-      });
-
-      if (!updateRes.ok) {
-        throw new Error('데이터베이스 저장에 실패했습니다.');
-      }
-
-      alert('AI 표지 생성 및 DB 저장이 완료되었습니다!');
+      setPendingImageUrl(imageSrc);
 
     } catch (error) {
       console.error(error);
@@ -117,14 +99,15 @@ function BookFormPage() {
 
     try {
       const now = new Date().toISOString();
+      const finalImageUrl = pendingImageUrl || coverImageUrl;
 
       if (isEdit) {
-        const res = await updateBook(id, { title, author, content, category, coverImageUrl, updatedAt: now });
+        const res = await updateBook(id, { title, author, content, category, coverImageUrl: finalImageUrl, updatedAt: now });
         if (!res.ok) throw new Error('수정에 실패했습니다.');
       } else {
         const res = await createBook({
           title, author, content, category,
-          coverImageUrl,
+          coverImageUrl: finalImageUrl,
           avg_rating: 0,
           rate_point: 0,
           createdAt: now,
@@ -161,8 +144,8 @@ function BookFormPage() {
             marginBottom: 12,
             overflow: 'hidden',
           }}>
-            {coverImageUrl
-              ? <img src={coverImageUrl} alt="표지" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+            {(pendingImageUrl || coverImageUrl)
+              ? <img src={pendingImageUrl || coverImageUrl} alt="표지" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
               : <span style={{ color: '#bbb', fontSize: '0.85rem', textAlign: 'center', padding: 8 }}>표지 이미지<br />미리보기</span>
             }
           </div>
@@ -180,17 +163,12 @@ function BookFormPage() {
             />
           </div>
 
-          {/* 모델 선택 */}
+          {/* 모델 고정 표시 */}
           <div style={{ marginBottom: 8 }}>
             <label style={{ fontSize: '0.8rem', fontWeight: 600, display: 'block', marginBottom: 4 }}>모델</label>
-            <select
-              value={model}
-              onChange={(e) => setModel(e.target.value)}
-              className="form-input"
-              style={{ width: '100%', padding: '7px 10px', fontSize: '0.85rem' }}
-            >
-              {MODELS.map((m) => <option key={m} value={m}>{m}</option>)}
-            </select>
+            <div style={{ padding: '7px 10px', border: '1px solid #ddd', borderRadius: 6, fontSize: '0.85rem', background: '#f9f9f9', color: '#555' }}>
+              {MODEL}
+            </div>
           </div>
 
           {/* 품질 선택 */}
