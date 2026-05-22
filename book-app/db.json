@@ -253,6 +253,24 @@
       "content": "12321312323",
       "createdAt": "2026-05-22T05:39:32.992Z",
       "id": 35
+    },
+    {
+      "bookId": 6,
+      "nickname": "어라",
+      "password": "1234",
+      "rating": 3,
+      "content": "안녕하세요",
+      "createdAt": "2026-05-22T05:39:02.610Z",
+      "id": 36
+    },
+    {
+      "bookId": 6,
+      "nickname": "뭐라",
+      "password": "1234",
+      "rating": 5,
+      "content": "별점 다섯개 드립니다",
+      "createdAt": "2026-05-22T05:39:25.130Z",
+      "id": 37
     }
   ]
 }
