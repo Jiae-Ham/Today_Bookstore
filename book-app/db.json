@@ -9,6 +9,7 @@
       "coverImageUrl": "/bookimg/book_1.png",
       "avg_rating": 4.8,
       "rate_point": 4.5,
+      "reviewCount": 1,
       "createdAt": "2026-05-01T10:00:00.000Z",
       "updatedAt": "2026-05-22T06:46:29.599Z"
     },
@@ -19,8 +20,9 @@
       "content": "우주의 신비와 인류의 기원을 탐구하는 현대 천문학의 고전. 별빛을 쫓는 인간의 위대한 여정.",
       "category": "400 자연과학",
       "coverImageUrl": "/bookimg/book_2.png",
-      "avg_rating": 4.9,
+      "avg_rating": 5,
       "rate_point": 4.7,
+      "reviewCount": 2,
       "createdAt": "2026-05-02T11:30:00.000Z",
       "updatedAt": "2026-05-02T11:30:00.000Z"
     },
@@ -33,6 +35,7 @@
       "coverImageUrl": "/bookimg/book_3.png",
       "avg_rating": 4.7,
       "rate_point": 4.4,
+      "reviewCount": 0,
       "createdAt": "2026-05-05T09:15:00.000Z",
       "updatedAt": "2026-05-05T09:15:00.000Z"
     },
@@ -43,8 +46,9 @@
       "content": "자바스크립트의 핵심 개념과 동작 원리를 깊이 있게 파헤치는 완벽 가이드.",
       "category": "500 기술과학",
       "coverImageUrl": "/bookimg/book_4.png",
-      "avg_rating": 4.8,
+      "avg_rating": 4.7,
       "rate_point": 4.6,
+      "reviewCount": 3,
       "createdAt": "2026-05-10T14:20:00.000Z",
       "updatedAt": "2026-05-10T14:20:00.000Z"
     },
@@ -55,8 +59,9 @@
       "content": "유인원에서 사이보그까지, 인간 역사의 대담하고 위대한 질문. 인류의 과거와 미래를 조망한다.",
       "category": "300 사회과학",
       "coverImageUrl": "/bookimg/book_5.png",
-      "avg_rating": 4.6,
-      "rate_point": 4.3,
+      "avg_rating": 5,
+      "rate_point": 4.7,
+      "reviewCount": 2,
       "createdAt": "2026-05-12T16:45:00.000Z",
       "updatedAt": "2026-05-12T16:45:00.000Z"
     },
@@ -69,6 +74,7 @@
       "coverImageUrl": "/bookimg/book_6.png",
       "avg_rating": 4.5,
       "rate_point": 4.2,
+      "reviewCount": 0,
       "createdAt": "2026-05-18T08:00:00.000Z",
       "updatedAt": "2026-05-18T08:00:00.000Z"
     },
@@ -81,6 +87,7 @@
       "coverImageUrl": "/bookimg/book_7.png",
       "avg_rating": 4.7,
       "rate_point": 4.5,
+      "reviewCount": 1,
       "createdAt": "2026-05-19T10:20:00.000Z",
       "updatedAt": "2026-05-19T10:20:00.000Z"
     },
@@ -93,6 +100,7 @@
       "coverImageUrl": "/bookimg/book_8.png",
       "avg_rating": 4.4,
       "rate_point": 4.1,
+      "reviewCount": 0,
       "createdAt": "2026-05-20T11:00:00.000Z",
       "updatedAt": "2026-05-20T11:00:00.000Z"
     },
@@ -105,6 +113,7 @@
       "coverImageUrl": "/bookimg/book_9.png",
       "avg_rating": 4.6,
       "rate_point": 4.3,
+      "reviewCount": 0,
       "createdAt": "2026-05-22T06:49:04.542Z",
       "updatedAt": "2026-05-22T06:49:04.543Z"
     },
@@ -117,6 +126,7 @@
       "coverImageUrl": "/bookimg/book_10.png",
       "avg_rating": 4,
       "rate_point": 3.8,
+      "reviewCount": 0,
       "createdAt": "2026-05-22T06:49:04.543Z",
       "updatedAt": "2026-05-22T06:49:04.543Z"
     },
@@ -129,6 +139,7 @@
       "coverImageUrl": "/bookimg/book_11.png",
       "avg_rating": 4.8,
       "rate_point": 4.6,
+      "reviewCount": 0,
       "createdAt": "2026-05-22T06:49:04.543Z",
       "updatedAt": "2026-05-22T06:49:04.543Z"
     },
@@ -141,6 +152,7 @@
       "coverImageUrl": "/bookimg/book_12.png",
       "avg_rating": 4.5,
       "rate_point": 4.2,
+      "reviewCount": 0,
       "createdAt": "2026-05-22T06:49:04.543Z",
       "updatedAt": "2026-05-22T06:49:04.543Z"
     },
@@ -153,6 +165,7 @@
       "coverImageUrl": "/bookimg/book_13.png",
       "avg_rating": 4.2,
       "rate_point": 4,
+      "reviewCount": 0,
       "createdAt": "2026-05-22T06:49:04.543Z",
       "updatedAt": "2026-05-22T06:49:04.543Z"
     },
@@ -165,6 +178,7 @@
       "coverImageUrl": "/bookimg/book_14.png",
       "avg_rating": 4.7,
       "rate_point": 4.5,
+      "reviewCount": 0,
       "createdAt": "2026-05-22T06:49:04.543Z",
       "updatedAt": "2026-05-22T06:49:04.543Z"
     },
@@ -177,6 +191,7 @@
       "coverImageUrl": "",
       "avg_rating": 4.9,
       "rate_point": 4.7,
+      "reviewCount": 0,
       "createdAt": "2026-05-22T06:49:04.543Z",
       "updatedAt": "2026-05-22T06:49:04.543Z"
     },
@@ -189,6 +204,7 @@
       "coverImageUrl": "/bookimg/book_16.png",
       "avg_rating": 4.6,
       "rate_point": 4.3,
+      "reviewCount": 0,
       "createdAt": "2026-05-22T06:49:04.543Z",
       "updatedAt": "2026-05-22T06:49:04.543Z"
     },
@@ -201,6 +217,7 @@
       "coverImageUrl": "/bookimg/book_17.png",
       "avg_rating": 4.5,
       "rate_point": 4.2,
+      "reviewCount": 0,
       "createdAt": "2026-05-22T06:49:04.543Z",
       "updatedAt": "2026-05-22T06:49:04.543Z"
     },
@@ -213,6 +230,7 @@
       "coverImageUrl": "/bookimg/book_18.png",
       "avg_rating": 4.7,
       "rate_point": 4.4,
+      "reviewCount": 0,
       "createdAt": "2026-05-22T06:49:04.543Z",
       "updatedAt": "2026-05-22T06:49:04.543Z"
     }
@@ -253,6 +271,52 @@
       "rating": 5,
       "content": "밤새서 다 읽었습니다. 힐링이 필요할 때 최고의 책!",
       "createdAt": "2026-05-22T10:20:00.000Z"
+    },
+    {
+      "bookId": 5,
+      "nickname": "123",
+      "password": "123",
+      "rating": 5,
+      "content": "123",
+      "createdAt": "2026-05-26T01:42:56.644Z",
+      "id": "66m6eoEMch4"
+    },
+    {
+      "bookId": 5,
+      "nickname": "123",
+      "password": "123",
+      "rating": 5,
+      "content": "123",
+      "createdAt": "2026-05-26T01:42:59.496Z",
+      "id": "TOVeO1EIn5M"
+    },
+    {
+      "bookId": 2,
+      "nickname": "123",
+      "password": "123",
+      "rating": 5,
+      "content": "123",
+      "createdAt": "2026-05-26T01:43:25.867Z",
+      "id": "-AmAwIo2scA"
+    },
+    {
+      "bookId": 2,
+      "nickname": "123",
+      "password": "123",
+      "rating": 5,
+      "content": "123",
+      "createdAt": "2026-05-26T01:43:28.669Z",
+      "id": "eEoOU2sxP88"
+    },
+    {
+      "bookId": 4,
+      "nickname": "123",
+      "password": "123",
+      "rating": 5,
+      "content": "123",
+      "createdAt": "2026-05-26T01:49:26.247Z",
+      "id": "ymoenO1vTfo"
     }
-  ]
+  ],
+  "$schema": "./node_modules/json-server/schema.json"
 }

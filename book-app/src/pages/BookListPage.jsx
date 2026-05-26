@@ -19,6 +19,8 @@ function BookListPage() {
   const [books, setBooks] = useState([]);
   const [selectedCategory, setSelectedCategory] = useState('전체');
   const [sortType, setSortType] = useState('review');
+  const [searchQuery, setSearchQuery] = useState('');
+  const [searchType, setSearchType] = useState('title');
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
   const navigate = useNavigate();
@@ -40,10 +42,18 @@ function BookListPage() {
     fetchBooks();
   }, []);
 
+  const searched = books.filter((b) => {
+    if (!searchQuery.trim()) return true;
+    const q = searchQuery.trim().toLowerCase();
+    if (searchType === 'title') return b.title?.toLowerCase().includes(q);
+    if (searchType === 'author') return b.author?.toLowerCase().includes(q);
+    return true;
+  });
+
   const filtered =
     selectedCategory === '전체'
-      ? books
-      : books.filter((b) => b.category === selectedCategory);
+      ? searched
+      : searched.filter((b) => b.category === selectedCategory);
 
   const sortedBooks = [...filtered].sort((a, b) => {
     if (sortType === 'review') {
@@ -63,6 +73,75 @@ function BookListPage() {
   return (
     <div>
       <h2 className="page-title">도서 목록</h2>
+
+      {/* 검색 바 */}
+      <div
+        style={{
+          display: 'flex',
+          gap: 8,
+          marginBottom: 20,
+          padding: '12px 16px',
+          borderRadius: 20,
+          background: 'rgba(255,255,255,0.55)',
+          backdropFilter: 'blur(10px)',
+          border: '1px dashed rgba(118,75,162,0.4)',
+          boxShadow: '0 4px 12px rgba(0,0,0,0.05)',
+        }}
+      >
+        <select
+          value={searchType}
+          onChange={(e) => setSearchType(e.target.value)}
+          style={{
+            padding: '8px 12px',
+            borderRadius: 12,
+            border: '1px solid rgba(118,75,162,0.3)',
+            background: 'rgba(255,255,255,0.8)',
+            color: 'var(--text-main)',
+            fontWeight: 600,
+            cursor: 'pointer',
+          }}
+        >
+          <option value="title">제목</option>
+          <option value="author">저자</option>
+        </select>
+        <input
+          type="text"
+          placeholder={
+            searchType === 'title'
+              ? '제목으로 검색...'
+              : searchType === 'author'
+              ? '저자로 검색...'
+              : '카테고리로 검색...'
+          }
+          value={searchQuery}
+          onChange={(e) => setSearchQuery(e.target.value)}
+          style={{
+            flex: 1,
+            padding: '8px 16px',
+            borderRadius: 12,
+            border: '1px solid rgba(118,75,162,0.3)',
+            background: 'rgba(255,255,255,0.8)',
+            color: 'var(--text-main)',
+            fontSize: '0.95rem',
+          }}
+        />
+        {searchQuery && (
+          <button
+            onClick={() => setSearchQuery('')}
+            style={{
+              padding: '8px 14px',
+              borderRadius: 12,
+              border: 'none',
+              background: 'rgba(200,200,200,0.5)',
+              cursor: 'pointer',
+              fontWeight: 600,
+              color: '#555',
+            }}
+          >
+            ✕
+          </button>
+        )}
+      </div>
 
       {/* 카테고리 필터 */}
       <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap', marginBottom: 20 }}>
