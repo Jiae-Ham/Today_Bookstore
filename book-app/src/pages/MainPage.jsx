@@ -4,6 +4,7 @@ import { getBooks } from '../api/books';
 
 function MainPage() {
   const [books, setBooks] = useState([]);
+  const [slideIndex, setSlideIndex] = useState(0);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
   const navigate = useNavigate();
@@ -29,48 +30,79 @@ function MainPage() {
     fetchBooks();
   }, []);
 
-  // 🔥 화제작 Best3 (베이지안 평균)
   const totalReviews = books.reduce((sum, b) => sum + (b.reviewCount || 0), 0);
   const C = books.length > 0 ? totalReviews / books.length : 1;
-  const totalRatingSum = books.reduce((sum, b) => sum + (b.avg_rating || 0) * (b.reviewCount || 0), 0);
+  const totalRatingSum = books.reduce(
+    (sum, b) => sum + (b.avg_rating || 0) * (b.reviewCount || 0),
+    0
+  );
   const m = totalReviews > 0 ? totalRatingSum / totalReviews : 0;
 
   const trendingBooks = [...books]
     .sort((a, b) => {
-      const n_a = a.reviewCount || 0;
-      const n_b = b.reviewCount || 0;
-      const scoreA = (C * m + (a.avg_rating || 0) * n_a) / (C + n_a);
-      const scoreB = (C * m + (b.avg_rating || 0) * n_b) / (C + n_b);
+      const nA = a.reviewCount || 0;
+      const nB = b.reviewCount || 0;
+      const scoreA = (C * m + (a.avg_rating || 0) * nA) / (C + nA);
+      const scoreB = (C * m + (b.avg_rating || 0) * nB) / (C + nB);
       return scoreB - scoreA;
     })
     .slice(0, 3);
 
-  // 추천 도서 (베이지안 점수 1위)
   const recommendedBook = trendingBooks[0];
 
-  // 🆕 신규 업데이트
   const recentBooks = [...books]
-    .sort(
-      (a, b) =>
-        new Date(b.updatedAt) -
-        new Date(a.updatedAt)
-    )
+    .sort((a, b) => new Date(b.updatedAt) - new Date(a.updatedAt))
     .slice(0, 5);
 
-  if (loading) {
-    return (
-      <p className="empty">
-        불러오는 중...
-      </p>
+  const bannerSlides = [
+    {
+      type: 'single',
+      label: '5월의 추천 도서',
+      title: recommendedBook?.title,
+      author: recommendedBook?.author,
+      book: recommendedBook,
+    },
+    {
+      type: 'single',
+      label: '화제작 Best 1',
+      title: trendingBooks[1]?.title,
+      author: trendingBooks[1]?.author,
+      book: trendingBooks[1],
+    },
+    {
+      type: 'multi',
+      label: 'NEW UPDATE',
+      title: '신규 도서',
+      author: '새롭게 등록된 도서를 만나보세요',
+      books: recentBooks.slice(0, 3),
+    },
+  ].filter((slide) =>
+    slide.type === 'single'
+      ? slide.book
+      : slide.books.length > 0
+  );
+
+  const currentSlide = bannerSlides[slideIndex];
+
+  const handlePrevSlide = () => {
+    setSlideIndex((prev) =>
+      prev === 0 ? bannerSlides.length - 1 : prev - 1
     );
+  };
+
+  const handleNextSlide = () => {
+    setSlideIndex((prev) =>
+      prev === bannerSlides.length - 1 ? 0 : prev + 1
+    );
+  };
+
+  if (loading) {
+    return <p className="empty">불러오는 중...</p>;
   }
 
   if (error) {
     return (
-      <p
-        className="empty"
-        style={{ color: '#e74c3c' }}
-      >
+      <p className="empty" style={{ color: '#e74c3c' }}>
         {error}
       </p>
     );
@@ -78,53 +110,234 @@ function MainPage() {
 
   return (
     <div>
-      <h2 className="page-title">5월의 추천 도서</h2>
-
-      {/* 추천 도서 */}
-      {recommendedBook ? (
+      {currentSlide && (
         <section
-          className="book-detail main-recommend"
-          onClick={() => navigate(`/books/${recommendedBook.id}`)}
-        >
-          <div className="main-recommend-cover">
-            {recommendedBook.coverImageUrl ? (
-              <img
-                src={recommendedBook.coverImageUrl}
-                alt={recommendedBook.title}
-              />
-            ) : (
-              <div className="main-recommend-empty">📖</div>
-            )}
+          style={{
+            position: 'relative',
+            minHeight: 290,
+            borderRadius: 22,
+            marginBottom: 56,
+            padding: '48px 72px',
+            background:
+              'linear-gradient(135deg, var(--primary-color), var(--secondary-color))',
+            overflow: 'hidden',
+            cursor: 'pointer',
+            boxShadow: 'var(--glass-shadow)',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'space-between',
+          }}
+          onClick={() => {
+            if (currentSlide.type === 'single') {
+              navigate(`/books/${currentSlide.book.id}`);
+            }
+          }}
+              >
+          <button
+            onClick={(e) => {
+              e.stopPropagation();
+              handlePrevSlide();
+            }}
+            style={{
+              position: 'absolute',
+              left: 18,
+              top: '50%',
+              transform: 'translateY(-50%)',
+              width: 44,
+              height: 44,
+              borderRadius: '50%',
+              border: 'none',
+              background: 'rgba(255,255,255,0.9)',
+              fontSize: 28,
+              cursor: 'pointer',
+              boxShadow: '0 4px 14px rgba(0,0,0,0.15)',
+            }}
+          >
+            ‹
+          </button>
+
+          <div
+            style={{
+              textAlign: 'left',
+              color: 'white',
+              zIndex: 1,
+            }}
+          >
+            <p
+              style={{
+                fontSize: '1rem',
+                fontWeight: 700,
+                marginBottom: 16,
+                opacity: 0.9,
+              }}
+            >
+              {currentSlide.label}
+            </p>
+
+            <h2
+              style={{
+                fontSize: '2.1rem',
+                lineHeight: 1.35,
+                fontWeight: 800,
+                marginBottom: 14,
+                maxWidth: 460,
+              }}
+            >
+              {currentSlide.title}
+            </h2>
+
+            <p
+              style={{
+                fontSize: '1.05rem',
+                fontWeight: 600,
+                opacity: 0.92,
+              }}
+            >
+              {currentSlide.author || '저자 정보 없음'}
+            </p>
           </div>
 
-          <div className="main-recommend-info">
-            <h2>{recommendedBook.title}</h2>
+          {currentSlide.type === 'single' ? (
+            <div
+              style={{
+                width: 190,
+                aspectRatio: '2 / 3',
+                borderRadius: 10,
+                overflow: 'hidden',
+                boxShadow: '0 14px 34px rgba(0,0,0,0.28)',
+                background: 'rgba(255,255,255,0.2)',
+                marginRight: 70,
+                flexShrink: 0,
+              }}
+            >
+              {currentSlide.book.coverImageUrl ? (
+                <img
+                  src={currentSlide.book.coverImageUrl}
+                  alt={currentSlide.book.title}
+                  style={{
+                    width: '100%',
+                    height: '100%',
+                    objectFit: 'cover',
+                    display: 'block',
+                  }}
+                />
+              ) : (
+                <div
+                  style={{
+                    width: '100%',
+                    height: '100%',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    fontSize: '4rem',
+                  }}
+                >
+                  📖
+                </div>
+              )}
+            </div>
+          ) : (
+            <div
+              style={{
+                display: 'flex',
+                gap: 18,
+                marginRight: 60,
+                flexShrink: 0,
+              }}
+            >
+              {currentSlide.books.map((book) => (
+                <div
+                  key={book.id}
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    navigate(`/books/${book.id}`);
+                  }}
+                  style={{
+                    width: 120,
+                    aspectRatio: '2 / 3',
+                    borderRadius: 10,
+                    overflow: 'hidden',
+                    boxShadow: '0 12px 28px rgba(0,0,0,0.24)',
+                    background: 'rgba(255,255,255,0.2)',
+                    cursor: 'pointer',
+                  }}
+                >
+                  {book.coverImageUrl ? (
+                    <img
+                      src={book.coverImageUrl}
+                      alt={book.title}
+                      style={{
+                        width: '100%',
+                        height: '100%',
+                        objectFit: 'cover',
+                        display: 'block',
+                      }}
+                    />
+                  ) : (
+                    <div
+                      style={{
+                        width: '100%',
+                        height: '100%',
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        fontSize: '3rem',
+                      }}
+                    >
+                      📖
+                    </div>
+                  )}
+                </div>
+              ))}
+            </div>
+          )}
 
-            <p className="author">
-              {recommendedBook.author || '저자 정보 없음'}
-            </p>
-
-            <p style={{ color: '#f5a623', marginBottom: 12 }}>
-              {'⭐'.repeat(Math.round(recommendedBook.avg_rating || 0))}{' '}
-              {recommendedBook.avg_rating > 0
-                ? recommendedBook.avg_rating.toFixed(1)
-                : '0.0'}
-            </p>
-
-            <p className="content">
-              {recommendedBook.content || '도서 설명이 없습니다.'}
-            </p>
+          <div
+            style={{
+              position: 'absolute',
+              right: 74,
+              bottom: 28,
+              padding: '6px 14px',
+              borderRadius: 999,
+              background: 'rgba(0,0,0,0.22)',
+              color: 'white',
+              fontWeight: 700,
+              fontSize: '0.9rem',
+            }}
+          >
+            {slideIndex + 1} / {bannerSlides.length}
           </div>
+
+          <button
+            onClick={(e) => {
+              e.stopPropagation();
+              handleNextSlide();
+            }}
+            style={{
+              position: 'absolute',
+              right: 18,
+              top: '50%',
+              transform: 'translateY(-50%)',
+              width: 44,
+              height: 44,
+              borderRadius: '50%',
+              border: 'none',
+              background: 'rgba(255,255,255,0.9)',
+              fontSize: 28,
+              cursor: 'pointer',
+              boxShadow: '0 4px 14px rgba(0,0,0,0.15)',
+            }}
+          >
+            ›
+          </button>
         </section>
-      ) : (
-        <p className="empty">등록된 도서가 없습니다.</p>
       )}
 
-      {/* 화제작 */}
       <h3
         style={{
-          marginBottom: 18,
-          textAlign: 'center',
+          marginTop: 55,
+          textAlign: 'left',
+          fontSize: 28,
         }}
       >
         🔥 화제작 Best 3
@@ -133,83 +346,16 @@ function MainPage() {
       <div
         className="book-grid"
         style={{
-          gridTemplateColumns:
-            'repeat(3, 1fr)',
+          gridTemplateColumns: 'repeat(3, 1fr)',
           marginBottom: 36,
         }}
       >
         {trendingBooks.map((book) => (
-        <div
-          key={book.id}
-          className="book-card"
-          onClick={() => navigate(`/books/${book.id}`)}
-          style={{ overflow: 'hidden' }}
-        >
-          {book.coverImageUrl ? (
-            <img
-              src={book.coverImageUrl}
-              alt={book.title}
-              style={{
-                width: '100%',
-                aspectRatio: '2 / 3',
-                objectFit: 'cover',
-                borderRadius: '16px 16px 0 0',
-                display: 'block',
-              }}
-            />
-          ) : (
-            <div
-              style={{
-                width: '100%',
-                aspectRatio: '2 / 3',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                fontSize: '3rem',
-              }}
-            >
-              📖
-            </div>
-          )}
-
-          <div className="book-card-body">
-            <h3>{book.title}</h3>
-            <p>{book.author}</p>
-
-            <p style={{ fontSize: '0.8rem', color: '#f5a623' }}>
-              ⭐ {book.avg_rating > 0 ? book.avg_rating.toFixed(1) : '0.0'}
-              {' · '}
-              리뷰 {book.reviewCount || 0}개
-            </p>
-          </div>
-        </div>
-        ))}
-      </div>
-
-      {/* 신규 업데이트 */}
-      <h3
-        style={{
-          marginBottom: 18,
-          textAlign: 'center',
-        }}
-      >
-        🆕 신규 업데이트
-      </h3>
-
-      <div
-        className="book-grid"
-        style={{
-          gridTemplateColumns:
-            'repeat(5, 1fr)',
-        }}
-      >
-        {recentBooks.map((book) => (
           <div
             key={book.id}
             className="book-card"
-            onClick={() =>
-              navigate(`/books/${book.id}`)
-            }
+            onClick={() => navigate(`/books/${book.id}`)}
+            style={{ overflow: 'hidden' }}
           >
             {book.coverImageUrl ? (
               <img
@@ -239,21 +385,73 @@ function MainPage() {
             )}
 
             <div className="book-card-body">
-              <h3
-                style={{
-                  fontSize: '0.9rem',
-                }}
-              >
-                {book.title}
-              </h3>
+              <h3>{book.title}</h3>
+              <p>{book.author}</p>
 
-              <p
+              <p style={{ fontSize: '0.8rem', color: '#f5a623' }}>
+                ⭐ {book.avg_rating > 0 ? book.avg_rating.toFixed(1) : '0.0'}
+                {' · '}
+                리뷰 {book.reviewCount || 0}개
+              </p>
+            </div>
+          </div>
+        ))}
+      </div>
+
+      <h3
+        style={{
+          marginTop: 55,
+          textAlign: 'left',
+          fontSize: 28,
+        }}
+      >
+        🆕 신규 업데이트
+      </h3>
+
+      <div
+        className="book-grid"
+        style={{
+          gridTemplateColumns: 'repeat(5, 1fr)',
+        }}
+      >
+        {recentBooks.map((book) => (
+          <div
+            key={book.id}
+            className="book-card"
+            onClick={() => navigate(`/books/${book.id}`)}
+            style={{ overflow: 'hidden' }}
+          >
+            {book.coverImageUrl ? (
+              <img
+                src={book.coverImageUrl}
+                alt={book.title}
                 style={{
-                  fontSize: '0.8rem',
+                  width: '100%',
+                  aspectRatio: '2 / 3',
+                  objectFit: 'cover',
+                  borderRadius: '16px 16px 0 0',
+                  display: 'block',
+                }}
+              />
+            ) : (
+              <div
+                style={{
+                  width: '100%',
+                  aspectRatio: '2 / 3',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  fontSize: '3rem',
                 }}
               >
-                {book.author}
-              </p>
+                📖
+              </div>
+            )}
+
+            <div className="book-card-body">
+              <h3 style={{ fontSize: '0.9rem' }}>{book.title}</h3>
+
+              <p style={{ fontSize: '0.8rem' }}>{book.author}</p>
 
               <p
                 style={{
@@ -263,11 +461,7 @@ function MainPage() {
                 }}
               >
                 {book.updatedAt
-                  ? new Date(
-                      book.updatedAt
-                    ).toLocaleDateString(
-                      'ko-KR'
-                    )
+                  ? new Date(book.updatedAt).toLocaleDateString('ko-KR')
                   : '날짜 없음'}
               </p>
             </div>
