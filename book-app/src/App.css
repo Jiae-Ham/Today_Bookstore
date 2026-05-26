@@ -42,9 +42,11 @@ body {
   -webkit-backdrop-filter: blur(10px);
   color: var(--text-main);
   padding: 16px 32px;
+
   display: flex;
   align-items: center;
-  justify-content: space-between;
+  justify-content: flex-start; /* 변경 */
+
   box-shadow: 0 4px 12px rgba(0,0,0,0.05);
   position: sticky;
   top: 0;
