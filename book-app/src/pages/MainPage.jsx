@@ -29,23 +29,24 @@ function MainPage() {
     fetchBooks();
   }, []);
 
-  // 추천 도서
-  const recommendedBook = books[0];
+  // 🔥 화제작 Best3 (베이지안 평균)
+  const totalReviews = books.reduce((sum, b) => sum + (b.reviewCount || 0), 0);
+  const C = books.length > 0 ? totalReviews / books.length : 1;
+  const totalRatingSum = books.reduce((sum, b) => sum + (b.avg_rating || 0) * (b.reviewCount || 0), 0);
+  const m = totalReviews > 0 ? totalRatingSum / totalReviews : 0;
 
-  // 🔥 화제작 Best3
   const trendingBooks = [...books]
     .sort((a, b) => {
-      const scoreA =
-        (a.avg_rating || 0) * 2 +
-        (a.reviewCount || 0);
-
-      const scoreB =
-        (b.avg_rating || 0) * 2 +
-        (b.reviewCount || 0);
-
+      const n_a = a.reviewCount || 0;
+      const n_b = b.reviewCount || 0;
+      const scoreA = (C * m + (a.avg_rating || 0) * n_a) / (C + n_a);
+      const scoreB = (C * m + (b.avg_rating || 0) * n_b) / (C + n_b);
       return scoreB - scoreA;
     })
     .slice(0, 3);
+
+  // 추천 도서 (베이지안 점수 1위)
+  const recommendedBook = trendingBooks[0];
 
   // 🆕 신규 업데이트
   const recentBooks = [...books]
