@@ -43,12 +43,28 @@ function BookListPage() {
   }, []);
 
   const searched = books.filter((b) => {
-    if (!searchQuery.trim()) return true;
-    const q = searchQuery.trim().toLowerCase();
-    if (searchType === 'title') return b.title?.toLowerCase().includes(q);
-    if (searchType === 'author') return b.author?.toLowerCase().includes(q);
-    return true;
-  });
+  if (!searchQuery.trim()) return true;
+  // 검색어 공백 제거
+  const q = searchQuery
+    .trim()
+    .toLowerCase()
+    .replace(/\s/g, '');
+  // 제목 공백 제거
+  const title = (b.title || '')
+    .toLowerCase()
+    .replace(/\s/g, '');
+  // 저자 공백 제거
+  const author = (b.author || '')
+    .toLowerCase()
+    .replace(/\s/g, '');
+  if (searchType === 'title') {
+    return title.includes(q);
+  }
+  if (searchType === 'author') {
+    return author.includes(q);
+  }
+  return true;
+});
 
   const filtered =
     selectedCategory === '전체'
