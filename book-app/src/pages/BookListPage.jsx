@@ -275,14 +275,36 @@ function BookListPage() {
               key={book.id}
               className="book-card"
               onClick={() => navigate(`/books/${book.id}`)}
+              style={{
+                overflow: 'hidden',
+              }}
             >
-              <div className="book-card-cover">
-                {book.coverImageUrl ? (
-                  <img src={book.coverImageUrl} alt={book.title} />
-                ) : (
-                  '📖'
-                )}
-              </div>
+              {book.coverImageUrl ? (
+                <img
+                  src={book.coverImageUrl}
+                  alt={book.title}
+                  style={{
+                    width: '100%',
+                    aspectRatio: '2 / 3',
+                    objectFit: 'cover',
+                    borderRadius: '16px 16px 0 0',
+                    display: 'block',
+                  }}
+                />
+              ) : (
+                <div
+                  style={{
+                    width: '100%',
+                    aspectRatio: '2 / 3',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    fontSize: '4rem',
+                  }}
+                >
+                  📖
+                </div>
+              )}
 
               <div className="book-card-body">
                 <h3>{book.title}</h3>

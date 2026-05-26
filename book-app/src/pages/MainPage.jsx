@@ -78,90 +78,46 @@ function MainPage() {
 
   return (
     <div>
-      <h2 className="page-title">
-        5월의 추천 도서
-      </h2>
+      <h2 className="page-title">5월의 추천 도서</h2>
 
       {/* 추천 도서 */}
       {recommendedBook ? (
         <section
-          className="book-detail"
-          style={{
-            flexDirection: 'row',
-            alignItems: 'center',
-            gap: 32,
-            marginBottom: 42,
-            cursor: 'pointer',
-          }}
-          onClick={() =>
-            navigate(
-              `/books/${recommendedBook.id}`
-            )
-          }
+          className="book-detail main-recommend"
+          onClick={() => navigate(`/books/${recommendedBook.id}`)}
         >
-          <div
-            className="book-detail-cover"
-            style={{ margin: 0 }}
-          >
+          <div className="main-recommend-cover">
             {recommendedBook.coverImageUrl ? (
               <img
-                src={
-                  recommendedBook.coverImageUrl
-                }
-                alt={
-                  recommendedBook.title
-                }
+                src={recommendedBook.coverImageUrl}
+                alt={recommendedBook.title}
               />
             ) : (
-              '📖'
+              <div className="main-recommend-empty">📖</div>
             )}
           </div>
 
-          <div
-            style={{
-              textAlign: 'left',
-              flex: 1,
-            }}
-          >
-            <h2>
-              {recommendedBook.title}
-            </h2>
+          <div className="main-recommend-info">
+            <h2>{recommendedBook.title}</h2>
 
             <p className="author">
-              {recommendedBook.author ||
-                '저자 정보 없음'}
+              {recommendedBook.author || '저자 정보 없음'}
             </p>
 
-            <p
-              style={{
-                color: '#f5a623',
-                marginBottom: 12,
-              }}
-            >
-              {'⭐'.repeat(
-                Math.round(
-                  recommendedBook.avg_rating ||
-                    0
-                )
-              )}{' '}
-              {recommendedBook.avg_rating >
-              0
-                ? recommendedBook.avg_rating.toFixed(
-                    1
-                  )
+            <p style={{ color: '#f5a623', marginBottom: 12 }}>
+              {'⭐'.repeat(Math.round(recommendedBook.avg_rating || 0))}{' '}
+              {recommendedBook.avg_rating > 0
+                ? recommendedBook.avg_rating.toFixed(1)
                 : '0.0'}
             </p>
 
             <p className="content">
-              {recommendedBook.content ||
-                '도서 설명이 없습니다.'}
+              {recommendedBook.content || '도서 설명이 없습니다.'}
             </p>
           </div>
         </section>
       ) : (
-        <p className="empty">
-          등록된 도서가 없습니다.
-        </p>
+        <p className="empty">등록된 도서가 없습니다.</p>
       )}
 
       {/* 화제작 */}
@@ -183,65 +139,50 @@ function MainPage() {
         }}
       >
         {trendingBooks.map((book) => (
-          <div
-            key={book.id}
-            className="book-card"
-            onClick={() =>
-              navigate(`/books/${book.id}`)
-            }
-          >
-            <div
-              className="book-card-cover"
+        <div
+          key={book.id}
+          className="book-card"
+          onClick={() => navigate(`/books/${book.id}`)}
+          style={{ overflow: 'hidden' }}
+        >
+          {book.coverImageUrl ? (
+            <img
+              src={book.coverImageUrl}
+              alt={book.title}
               style={{
-                paddingTop: 18,
-                background:
-                  'rgba(255,255,255,0.35)',
+                width: '100%',
+                aspectRatio: '2 / 3',
+                objectFit: 'cover',
+                borderRadius: '16px 16px 0 0',
+                display: 'block',
+              }}
+            />
+          ) : (
+            <div
+              style={{
+                width: '100%',
+                aspectRatio: '2 / 3',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                fontSize: '3rem',
               }}
             >
-              {book.coverImageUrl ? (
-                <img
-                  src={
-                    book.coverImageUrl
-                  }
-                  alt={book.title}
-                  style={{
-                    width: '70%',
-                    height: '90%',
-                    objectFit: 'contain',
-                    borderRadius: 12,
-                    boxShadow:
-                      '0 6px 18px rgba(0,0,0,0.08)',
-                  }}
-                />
-              ) : (
-                '📖'
-              )}
+              📖
             </div>
+          )}
 
-            <div className="book-card-body">
-              <h3>{book.title}</h3>
+          <div className="book-card-body">
+            <h3>{book.title}</h3>
+            <p>{book.author}</p>
 
-              <p>{book.author}</p>
-
-              <p
-                style={{
-                  fontSize: '0.8rem',
-                  color: '#f5a623',
-                }}
-              >
-                ⭐{' '}
-                {book.avg_rating > 0
-                  ? book.avg_rating.toFixed(
-                      1
-                    )
-                  : '0.0'}
-                {' · '}
-                리뷰{' '}
-                {book.reviewCount || 0}
-                개
-              </p>
-            </div>
+            <p style={{ fontSize: '0.8rem', color: '#f5a623' }}>
+              ⭐ {book.avg_rating > 0 ? book.avg_rating.toFixed(1) : '0.0'}
+              {' · '}
+              리뷰 {book.reviewCount || 0}개
+            </p>
           </div>
+        </div>
         ))}
       </div>
 
@@ -270,34 +211,32 @@ function MainPage() {
               navigate(`/books/${book.id}`)
             }
           >
-            <div
-              className="book-card-cover"
-              style={{
-                height: 150,
-                paddingTop: 14,
-                background:
-                  'rgba(255,255,255,0.35)',
-              }}
-            >
-              {book.coverImageUrl ? (
-                <img
-                  src={
-                    book.coverImageUrl
-                  }
-                  alt={book.title}
-                  style={{
-                    width: '70%',
-                    height: '90%',
-                    objectFit: 'contain',
-                    borderRadius: 12,
-                    boxShadow:
-                      '0 6px 18px rgba(0,0,0,0.08)',
-                  }}
-                />
-              ) : (
-                '📖'
-              )}
-            </div>
+            {book.coverImageUrl ? (
+              <img
+                src={book.coverImageUrl}
+                alt={book.title}
+                style={{
+                  width: '100%',
+                  aspectRatio: '2 / 3',
+                  objectFit: 'cover',
+                  borderRadius: '16px 16px 0 0',
+                  display: 'block',
+                }}
+              />
+            ) : (
+              <div
+                style={{
+                  width: '100%',
+                  aspectRatio: '2 / 3',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  fontSize: '3rem',
+                }}
+              >
+                📖
+              </div>
+            )}
 
             <div className="book-card-body">
               <h3

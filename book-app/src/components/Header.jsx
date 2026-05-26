@@ -85,7 +85,7 @@ function Header() {
       {/* 왼쪽: 로고 + 버튼 */}
       <div style={{ display: 'flex', alignItems: 'center', gap: '14px' }}>
         <h1 onClick={() => navigate('/')} style={{ margin: 0 }}>
-          📚 도서관리 시스템
+          📚 오늘의 서재
         </h1>
         <div style={{ width: '1px', height: '24px', background: 'rgba(0,0,0,0.08)', margin: '0 4px' }} />
         <button className="btn-new" onClick={() => navigate('/books')}>도서 목록</button>
