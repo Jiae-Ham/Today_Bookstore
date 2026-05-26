@@ -7,9 +7,9 @@
       "content": "한국 SF의 우아한 계보, 김초엽 첫 소설집. 슬픔과 경이가 교차하는 아름다운 세계.",
       "category": "800 문학",
       "coverImageUrl": "/bookimg/book_1.png",
-      "avg_rating": 4.4,
-      "rate_point": 4.2,
-      "reviewCount": 7,
+      "avg_rating": 4.5,
+      "rate_point": 4.3,
+      "reviewCount": 8,
       "createdAt": "2026-05-01T10:00:00.000Z",
       "updatedAt": "2026-05-26T05:20:57.086Z"
     },
@@ -910,6 +910,15 @@
       "rating": 3,
       "content": "라틴어 어원에 대한 학습보다 저자 본인의 꼰대스러운 훈계나 자아성찰 얘기가 비중을 더 많이 차지해서 실망스럽네요.",
       "createdAt": "2026-05-05T10:00:00.000Z"
+    },
+    {
+      "bookId": 1,
+      "nickname": "미래",
+      "password": "123",
+      "rating": 5,
+      "content": "너무 재밌어요",
+      "createdAt": "2026-05-26T06:32:34.384Z",
+      "id": "dE2089r"
     }
   ],
   "$schema": "./node_modules/json-server/schema.json"
