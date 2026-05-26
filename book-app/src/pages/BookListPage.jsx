@@ -73,11 +73,26 @@ function BookListPage() {
 
   const sortedBooks = [...filtered].sort((a, b) => {
     if (sortType === 'review') {
-      return (b.reviewCount || 0) - (a.reviewCount || 0);
+      // 평점 우선
+      const ratingDiff =
+        (b.avg_rating || 0) - (a.avg_rating || 0);
+
+      // 평점 같으면 리뷰 수로 정렬
+      if (ratingDiff !== 0) {
+        return ratingDiff;
+      }
+
+      return (
+        (b.reviewCount || 0) -
+        (a.reviewCount || 0)
+      );
     }
 
     if (sortType === 'date') {
-      return new Date(b.createdAt) - new Date(a.createdAt);
+      return (
+        new Date(b.createdAt) -
+        new Date(a.createdAt)
+      );
     }
 
     return 0;
@@ -239,7 +254,7 @@ function BookListPage() {
                   : 'none',
             }}
           >
-            💬 리뷰순
+            ⭐ 리뷰순
           </button>
 
           <button
@@ -261,7 +276,7 @@ function BookListPage() {
                   : 'none',
             }}
           >
-            📅 날짜순
+            📅 최신순
           </button>
         </div>
       </div>
