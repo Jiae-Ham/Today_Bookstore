@@ -26,7 +26,16 @@ function BookFormPage() {
   const [generating, setGenerating] = useState(false);
 
   useEffect(() => {
-    if (!isEdit) return;
+    if (!isEdit) {
+      setTitle('');
+      setAuthor('');
+      setContent('');
+      setCategory(CATEGORIES[0]);
+      setCoverImageUrl('');
+      setPendingImageUrl('');
+      setError('');
+      return;
+    }
     async function fetchBook() {
       try {
         const res = await getBook(id);
