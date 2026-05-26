@@ -47,26 +47,23 @@ function BookDetailPage() {
   // rate_point 재계산 후 books에 PATCH
   const updateRatePoint = async (updatedReviews) => {
     if (updatedReviews.length === 0) {
-      await updateBook(id, { avg_rating: 0, rate_point: 0 });
-      setBook((prev) => ({ ...prev, avg_rating: 0, rate_point: 0 }));
+      await updateBook(id, { avg_rating: 0, rate_point: 0, reviewCount: 0 });
+      setBook((prev) => ({ ...prev, avg_rating: 0, rate_point: 0, reviewCount: 0 }));
       return;
     }
 
-    // avg_rating: 단순 평균 (화면 표시용)
     const ratingSum = updatedReviews.reduce((sum, r) => sum + r.rating, 0);
     const avgRating = Math.round((ratingSum / updatedReviews.length) * 10) / 10;
 
-    // rate_point: 베이지안 평균 (추천 정렬용)
-    // 공식: (전체 평균 × 최소 리뷰수 + 해당 도서 별점 합계) / (최소 리뷰수 + 해당 도서 리뷰수)
-    const C = 5; // 최소 기준 리뷰 수
+    const C = 5;
     const booksWithRatings = allBooks.filter((b) => b.avg_rating > 0);
     const m = booksWithRatings.length > 0
       ? booksWithRatings.reduce((sum, b) => sum + b.avg_rating, 0) / booksWithRatings.length
-      : 3.5; // 전체 평균 없으면 중간값
+      : 3.5;
     const bayesian = Math.round(((C * m + ratingSum) / (C + updatedReviews.length)) * 10) / 10;
 
-    await updateBook(id, { avg_rating: avgRating, rate_point: bayesian });
-    setBook((prev) => ({ ...prev, avg_rating: avgRating, rate_point: bayesian }));
+    await updateBook(id, { avg_rating: avgRating, rate_point: bayesian, reviewCount: updatedReviews.length });
+    setBook((prev) => ({ ...prev, avg_rating: avgRating, rate_point: bayesian, reviewCount: updatedReviews.length }));
   };
 
   const handleDelete = async () => {
