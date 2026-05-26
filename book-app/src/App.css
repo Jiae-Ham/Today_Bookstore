@@ -4,7 +4,7 @@
   --glass-bg: rgba(255, 255, 255, 0.65);
   --glass-border: rgba(255, 255, 255, 0.4);
   --glass-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.1);
-  --glass-blur: blur(12px);
+  --glass-blur: blur(6px);
   
   --primary-color: #667eea;
   --primary-hover: #5a67d8;
@@ -13,6 +13,8 @@
   --danger-color: #f56565;
   --text-main: #2d3748;
   --text-muted: #718096;
+  --header-bg: rgba(255, 255, 255, 0.75);
+  --heading-color: #667eea;
 }
 
 * {
@@ -27,6 +29,7 @@ body {
   background-attachment: fixed;
   color: var(--text-main);
   min-height: 100vh;
+  transition: color 0.3s ease, background 0.3s ease;
 }
 
 .container {
@@ -37,9 +40,10 @@ body {
 
 /* Header */
 .header {
-  background: rgba(255, 255, 255, 0.75);
-  backdrop-filter: blur(10px);
-  -webkit-backdrop-filter: blur(10px);
+  background: var(--header-bg);
+  transition: background 0.3s ease;
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
   color: var(--text-main);
   padding: 16px 32px;
 
@@ -193,9 +197,8 @@ body {
   font-size: 2rem;
   font-weight: 700;
   margin-bottom: 12px;
-  background: linear-gradient(135deg, #2d3748, #4a5568);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
+  color: var(--heading-color);
+  transition: color 0.3s ease;
 }
 
 .book-detail .author {
@@ -209,8 +212,9 @@ body {
   line-height: 1.8;
   white-space: pre-wrap;
   margin-bottom: 30px;
-  color: #4a5568;
+  color: var(--text-main);
   font-size: 1.05rem;
+  transition: color 0.3s ease;
 }
 
 .book-detail .dates {
@@ -246,10 +250,24 @@ body {
   font-size: 1.8rem;
   font-weight: 700;
   text-align: center;
+  color: var(--heading-color);
+  transition: color 0.3s ease;
 }
 
 .form-group {
   margin-bottom: 24px;
+}
+
+.form-group select,
+select.form-input {
+  color: #2d3748 !important;
+  background-color: white !important;
+}
+
+.form-input option,
+.form-group select option {
+  color: #2d3748 !important;
+  background-color: white !important;
 }
 
 .form-group label {
@@ -330,6 +348,8 @@ body {
   font-size: 1.8rem;
   font-weight: 700;
   margin-bottom: 24px;
+  color: var(--heading-color);
+  transition: color 0.3s ease;
 }
 
 /* Utility Animations */
@@ -340,4 +360,15 @@ body {
 
 .fade-in {
   animation: fadeIn 0.4s ease forwards;
+}
+
+/* 다크모드 명시적 색상 */
+[data-theme="dark"] .book-card-body h3 {
+  color: #e2e8f0;
+}
+[data-theme="dark"] .book-card-body p {
+  color: #94a3b8;
+}
+[data-theme="dark"] .book-card {
+  background: rgba(255, 255, 255, 0.08);
 }

@@ -160,7 +160,7 @@ function BookDetailPage() {
 
         {/* 리뷰 목록 */}
         {reviews.length === 0 ? (
-          <p style={{ color: '#aaa', marginBottom: 24 }}>아직 리뷰가 없습니다.</p>
+          <p style={{ color: 'var(--text-muted)', marginBottom: 24 }}>아직 리뷰가 없습니다.</p>
         ) : (
           <ul style={{ listStyle: 'none', marginBottom: 24 }}>
             {reviews.map((r) => (
@@ -186,8 +186,8 @@ function BookDetailPage() {
                     </button>
                   </div>
                 </div>
-                <p style={{ marginTop: 6, color: '#555', fontSize: '0.9rem', textAlign: 'left' }}>{r.content}</p>
-                <p style={{ fontSize: '0.75rem', color: '#bbb', marginTop: 4 }}>{new Date(r.createdAt).toLocaleDateString('ko-KR')}</p>
+                <p style={{ marginTop: 6, color: 'var(--text-main)', fontSize: '0.9rem', textAlign: 'left' }}>{r.content}</p>
+                <p style={{ fontSize: '0.75rem', color: 'var(--text-muted)', marginTop: 4 }}>{new Date(r.createdAt).toLocaleDateString('ko-KR')}</p>
                 {deletingReviewId === r.id && (
                   <div style={{ display: 'flex', gap: 8, marginTop: 8, alignItems: 'center' }}>
                     <input

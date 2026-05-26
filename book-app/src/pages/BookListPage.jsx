@@ -112,7 +112,7 @@ function BookListPage() {
             borderRadius: 12,
             border: '1px solid rgba(118,75,162,0.3)',
             background: 'rgba(255,255,255,0.8)',
-            color: 'var(--text-main)',
+            color: '#2d3748',
             fontWeight: 600,
             cursor: 'pointer',
           }}
