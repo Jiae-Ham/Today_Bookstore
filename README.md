@@ -1,111 +1,157 @@
-# R&R
+# 도서관리 시스템
 
-- 조장 / PM,기획 : 함지애
-- 발표자 : 김현석
-- UI,레이아웃 : 성예은, 손진원
-- CRUD 연동 : 함지애
-- OpenAI 연동 : 김만서, 장윤재
-- 스타일링, QA : 박진용, 김현석
-- 발표 자료 /문서 : 공다연
+AI 표지 생성을 지원하는 도서관리 웹 애플리케이션입니다.
 
-# Ideas
+## 기술 스택
 
-1. 도서 카테고리를 지정하여 장르 별로 도서 목록 보기 - 박진용
-2. 즐겨찾기 기능 및 카테고리 기능 - 함지애
-3. 독자 반응 기반 표지( 좋아요 수, 클릭 수, 조회 수 기록) - 공다연
-4. 좋아요 수로 정렬, 코멘트 등록 - 장윤재
-5. 별점과 리뷰 남기기 - 김현석
-6. 연관 도서 추천 - 김만서
-- 최종 채택 의견
-    - 별점
-    - 리뷰
-    - 카테고리 별 도서 분류
-    - 추천 도서 제시
+| 구분 | 기술 |
+|---|---|
+| 프론트엔드 | React 19 + Vite |
+| 라우팅 | react-router-dom |
+| 로컬 API 서버 | json-server 0.17.4 |
+| AI 이미지 생성 | OpenAI Images API (gpt-image-2) |
 
-# To Do List
+## 서비스 구조
 
-- [ ]  메인 목록에서 카테고리 필터링
-- 세부 사항
-    - 동화/소설, 자기 계발, 인문/교양, 과학/기술, 경제/비즈니스
-- [ ]  도서 등록할 때 카테고리 지정해서 넣을 수 있도록
-- 세부 사항
-    - 
-- [ ]  도서마다 좋아요 버튼(좋아요 정렬 기능은 선택사항)
-- 세부 사항
-    - 
-- [ ]  도서마다 별점, 리뷰(별점 + 리뷰 수 조합)를 남길 수 있도록
-- 세부 사항
-    - 이메일-비밀번호를 필요로 하는 회원가입이 아닌 익명 닉네임/ 삭제용 비밀번호로만 이뤄진 간단한 사용자 인증(티스토리 댓글 형식)
-    
-    
-- [ ]  상세 페이지 하단에 같은 카테고리 도서를 자동으로 추천
-- 세부 사항
-    - **추천 알고리즘**: 넷플릭스 편집 방식과 유사한 형태로, 별점과 리뷰가 많은 책들을 상위에 배치하여 추천
+```
+book-app/
+├── public/
+├── src/
+│   ├── api/
+│   │   ├── config.js        # BASE_URL 설정
+│   │   ├── books.js         # 도서 API
+│   │   └── reviews.js       # 리뷰 API
+│   ├── components/
+│   │   └── Header.jsx       # 네비게이션 바 + 테마 설정
+│   ├── pages/
+│   │   ├── MainPage.jsx     # 메인 (추천/화제작/신규 도서)
+│   │   ├── BookListPage.jsx # 도서 목록 + 카테고리 필터
+│   │   ├── BookDetailPage.jsx  # 도서 상세 + 리뷰 + 연관 추천
+│   │   └── BookFormPage.jsx # 도서 등록 / 수정 + AI 표지 생성
+│   ├── App.jsx
+│   └── App.css
+├── db.json                  # json-server 데이터
+└── package.json
+```
 
-# Data
+## 실행 방법
 
-<img width="813" height="139" alt="image" src="https://github.com/user-attachments/assets/b90e1c05-301c-4fb5-8ee9-de0ff95e4f54" />
+**1. 패키지 설치 (최초 1회)**
+```bash
+cd book-app
+npm install
+```
 
+**2. 터미널 2개를 열어 각각 실행**
 
-- db field
-    
-    { id, title, author, content, coverImageUrl, createdAt, updatedAt , rate_point, category} 
-    
-- KDC 10진 분류법 장르
-    
-    KDC 10진 분류법 장르
-    
-    000 총류 (백과사전, 사전, 도서관학, 컴퓨터/정보학 등)
-    
-    100 철학 (철학, 심리학, 윤리학 등)
-    
-    200 종교 (불교, 기독교 등 각종 종교)
-    
-    300 사회과학 (사회학, 통계학, 경제학, 법학, 교육학 등)
-    
-    400 자연과학 (수학, 물리학, 화학, 생물학 등)
-    
-    500 기술과학 (의학, 공학, 농학, 가정학 등 응용과학)
-    
-    600 예술 (건축, 조각, 음악, 미술, 체육 등)
-    
-    700 언어 (한국어, 영어 등 각종 어학)
-    
-    800 문학 (시, 소설, 수필 등)
-    
-- API 엔드 포인트
-    
-    Base URL (json-server): `http://localhost:3000`
-    
-    | 구분 | 서비스명 | API 이름 | Method | Rest API |
-    | --- | --- | --- | --- | --- |
-    | 도서 | 도서 관리 | 도서 목록 조회 | GET | /books |
-    | 도서 | 도서 관리 | 카테고리별 도서 조회 | GET | /books?category={category} |
-    | 도서 | 도서 관리 | 도서 상세 조회 | GET | /books/:id |
-    | 도서 | 도서 관리 | 도서 등록 | POST | /books |
-    | 도서 | 도서 관리 | 도서 수정 | PATCH | /books/:id |
-    | 도서 | 도서 관리 | 평점/리뷰수 업데이트 | PATCH | /books/:id |
-    | 도서 | 도서 관리 | 도서 삭제 | DELETE | /books/:id |
-    | 리뷰 | 리뷰 관리 | 도서 리뷰 목록 조회 | GET | /reviews?bookId={id} |
-    | 리뷰 | 리뷰 관리 | 리뷰 등록 | POST | /reviews |
-    | 리뷰 | 리뷰 관리 | 리뷰 삭제 | DELETE | /reviews/:id |
-    | AI | 이미지 생성 | AI 표지 이미지 생성 | POST | https://api.openai.com/v1/images/generations |
+```bash
+# 터미널 1 - json-server (데이터 서버, 포트 3000)
+npx json-server@0.17.4 --watch db.json --port 3000
+```
 
-    - **POST /books** body: `{ title, author, content, category, coverImageUrl, avg_rating, rate_point, createdAt, updatedAt }`
-    - **POST /reviews** body: `{ bookId, nickname, password, rating(1~5), content, createdAt }`
-    - **PATCH /books/:id (평점 업데이트)** body: `{ avg_rating, rate_point, reviewCount }` — 리뷰 등록/삭제 시 베이지안 평균으로 자동 갱신
-    - **AI 이미지 생성**: `Authorization: Bearer {API_KEY}` 헤더 필요, 모델 `gpt-image-2`, 응답 `data[0].b64_json`
-- API Key
-- UI 공유 링크
-    
-    https://www.figma.com/design/AUYDy4MnsPUtpsWCEh4iRY/%EB%AF%B8%EB%8B%88%ED%94%84%EB%A1%9C%EC%A0%9D%ED%8A%B8-4%EC%B0%A8?node-id=0-1&t=axweK2wBFd1GGt7X-1
-    
-- 구글 공유 링크
-    
-    https://docs.google.com/document/d/1HPFhzzTc0TDQfalX9Tp39FLKFOkzeVqadcQjZH1yu6I/edit?usp=sharing
-    
-- 깃허브 공유 링크
-    
-    https://github.com/Jiae-Ham/AivleSchool_miniproj4
-    
+```bash
+# 터미널 2 - React 앱 (포트 5173)
+npm run dev
+```
 
+**3. 브라우저에서 접속**
+```
+http://localhost:5173
+```
+
+## 주요 기능
+
+### 도서 CRUD
+- 도서 목록 조회 / 카테고리 필터링
+- 도서 상세 조회
+- 도서 등록 / 수정 / 삭제
+
+### AI 표지 생성 (OpenAI)
+도서 등록 및 수정 페이지에서 AI로 표지 이미지를 자동 생성할 수 있습니다.
+
+1. 제목과 내용을 먼저 입력합니다.
+2. 좌측 패널에 OpenAI API Key(`sk-...`)를 입력합니다.
+3. 품질을 선택합니다. (`low` / `medium` / `high`)
+4. **AI 표지 생성** 버튼을 클릭합니다.
+5. 생성된 이미지를 확인한 뒤 **등록** 또는 **저장** 버튼을 누릅니다.
+
+> 사용 모델: `gpt-image-2` / 출력 크기: `1024x1536`  
+> API Key는 서버로 전송되지 않으며 브라우저에서만 사용됩니다.
+
+### 카테고리 기능
+- 도서 등록 시 KDC(한국십진분류법) 기반 카테고리 지정
+- 목록 페이지에서 카테고리 필터링
+
+| 카테고리 |
+|---|
+| 000 총류 |
+| 100 철학 |
+| 200 종교 |
+| 300 사회과학 |
+| 400 자연과학 |
+| 500 기술과학 |
+| 600 예술 |
+| 700 언어 |
+| 800 문학 |
+
+### 리뷰 및 별점 기능
+- 도서마다 별점(1~5) 등록 및 조회
+- 닉네임 + 비밀번호 기반 리뷰 작성 / 삭제
+
+### 추천 기능
+- **메인 페이지**: 베이지안 평균 점수 1위 도서를 추천 도서로 표시
+- **화제작 Best 3**: 베이지안 평균 점수 상위 3개 도서 표시
+- **상세 페이지**: 같은 카테고리 도서 자동 추천
+
+> 베이지안 평균 공식: `score = (C × m + avg_rating × n) / (C + n)`  
+> `m` = 전체 평균 평점, `C` = 전체 평균 리뷰 수, `n` = 해당 도서 리뷰 수
+
+### 테마
+우측 상단 팔레트에서 5가지 색상 테마 변경 가능 (선택값 localStorage 저장)
+
+## 주요 화면
+
+### 메인 페이지
+<img src="./book-app/screenshots/메인페이지.png" width="700" alt="메인 페이지">
+
+### 도서 목록
+<img src="./book-app/screenshots/도서목록페이지.png" width="700" alt="도서 목록">
+
+### 도서 목록 (최신순)
+<img src="./book-app/screenshots/도서목록페이지-최신순.png" width="700" alt="도서 목록 최신순">
+
+### 도서 상세
+<img src="./book-app/screenshots/도서상세페이지.png" width="700" alt="도서 상세">
+
+### 도서 등록
+<img src="./book-app/screenshots/도서등록페이지.png" width="700" alt="도서 등록">
+
+### 도서 수정
+<img src="./book-app/screenshots/도서수정페이지.png" width="700" alt="도서 수정">
+
+## API 엔드포인트
+
+### 도서 API (json-server)
+
+| 기능 | Method | 엔드포인트 |
+|---|---|---|
+| 도서 전체 목록 조회 | GET | `/books` |
+| 카테고리별 도서 조회 | GET | `/books?category={category}` |
+| 도서 상세 조회 | GET | `/books/:id` |
+| 도서 등록 | POST | `/books` |
+| 도서 수정 | PATCH | `/books/:id` |
+| 도서 삭제 | DELETE | `/books/:id` |
+
+### 리뷰 API (json-server)
+
+| 기능 | Method | 엔드포인트 |
+|---|---|---|
+| 도서별 리뷰 목록 조회 | GET | `/reviews?bookId={id}` |
+| 리뷰 등록 | POST | `/reviews` |
+| 리뷰 삭제 | DELETE | `/reviews/:id` |
+
+### 외부 API
+
+| 기능 | Method | 엔드포인트 |
+|---|---|---|
+| AI 표지 이미지 생성 | POST | `https://api.openai.com/v1/images/generations` |
