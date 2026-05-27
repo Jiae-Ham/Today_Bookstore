@@ -75,21 +75,26 @@
     
 - API 엔드 포인트
     
+    Base URL (json-server): `http://localhost:3000`
     
     | 구분 | 서비스명 | API 이름 | Method | Rest API |
     | --- | --- | --- | --- | --- |
-    | 도서 | 도서관리 | 도서 목록 조회 | GET | /books |
-    | 도서 | 도서관리 | 카테고리별 도서 조회 | GET | /books?category={category} |
-    | 도서 | 도서관리 | 별점순 도서 조회 | GET | /books?_sort=likes&_order=desc |
-    | 도서 | 도서관리 | 도서 상세 조회 | GET | /books/:id |
-    | 도서 | 도서관리 | 도서 등록 | POST | /books |
-    | 도서 | 도서관리 | 도서 수정 | PATCH | /books/:id |
-    | 도서 | 도서관리 | 도서 삭제 | DELETE | /books/:id |
-    | 도서 | 도서관리 | 좋아요 업데이트 | PATCH | /books/:id |
-    | 도서 | 도서관리 | 싫어요 업데이트 | PATCH | /books/:id |
-    | 리뷰 | 도서관리 | 도서 리뷰 목록 조회 | GET | /reviews?bookId={id} |
+    | 도서 | 도서 관리 | 도서 목록 조회 | GET | /books |
+    | 도서 | 도서 관리 | 카테고리별 도서 조회 | GET | /books?category={category} |
+    | 도서 | 도서 관리 | 도서 상세 조회 | GET | /books/:id |
+    | 도서 | 도서 관리 | 도서 등록 | POST | /books |
+    | 도서 | 도서 관리 | 도서 수정 | PATCH | /books/:id |
+    | 도서 | 도서 관리 | 평점/리뷰수 업데이트 | PATCH | /books/:id |
+    | 도서 | 도서 관리 | 도서 삭제 | DELETE | /books/:id |
+    | 리뷰 | 리뷰 관리 | 도서 리뷰 목록 조회 | GET | /reviews?bookId={id} |
     | 리뷰 | 리뷰 관리 | 리뷰 등록 | POST | /reviews |
     | 리뷰 | 리뷰 관리 | 리뷰 삭제 | DELETE | /reviews/:id |
+    | AI | 이미지 생성 | AI 표지 이미지 생성 | POST | https://api.openai.com/v1/images/generations |
+
+    - **POST /books** body: `{ title, author, content, category, coverImageUrl, avg_rating, rate_point, createdAt, updatedAt }`
+    - **POST /reviews** body: `{ bookId, nickname, password, rating(1~5), content, createdAt }`
+    - **PATCH /books/:id (평점 업데이트)** body: `{ avg_rating, rate_point, reviewCount }` — 리뷰 등록/삭제 시 베이지안 평균으로 자동 갱신
+    - **AI 이미지 생성**: `Authorization: Bearer {API_KEY}` 헤더 필요, 모델 `gpt-image-2`, 응답 `data[0].b64_json`
 - API Key
 - UI 공유 링크
     
