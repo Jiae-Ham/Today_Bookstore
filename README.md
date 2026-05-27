@@ -104,16 +104,3 @@
     https://github.com/Jiae-Ham/AivleSchool_miniproj4
     
 
-# 진행 상황(5/22)
-
-[-](https://www.notion.so/36836ba31da6807faf44ce8a063243e2?pvs=21)
-
-- AI 토큰 소진(충전 완료)
-
-# 진행 상황(5/26)
-
-[—](https://www.notion.so/36836ba31da680aaa0ddf00ccbea351d?pvs=21)
-
-# 진행 상황(5/27)
-
-[—-](https://www.notion.so/36836ba31da6808f931ff32b00cb0470?pvs=21)
