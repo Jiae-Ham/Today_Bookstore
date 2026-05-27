@@ -37,7 +37,6 @@
 - 세부 사항
     - 이메일-비밀번호를 필요로 하는 회원가입이 아닌 익명 닉네임/ 삭제용 비밀번호로만 이뤄진 간단한 사용자 인증(티스토리 댓글 형식)
     
-    ![image.png](attachment:28e1c140-2ce2-4eaf-abfa-1b5d918da90f:image.png)
     
 - [ ]  상세 페이지 하단에 같은 카테고리 도서를 자동으로 추천
 - 세부 사항
@@ -45,7 +44,8 @@
 
 # Data
 
-![image.png](attachment:4d3af06b-50b1-46f6-b333-f7b93d85b307:image.png)
+<img width="813" height="139" alt="image" src="https://github.com/user-attachments/assets/b90e1c05-301c-4fb5-8ee9-de0ff95e4f54" />
+
 
 - db field
     
