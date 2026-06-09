@@ -4,6 +4,7 @@ import com.aivle.bookserver.rating.RatingService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import com.aivle.bookserver.exception.ReviewNotFoundException;
 
 import java.util.List;
 
@@ -29,7 +30,7 @@ public class ReviewService {
     @Transactional
     public void deleteReview(Long reviewId) {
         Review review = reviewRepository.findById(reviewId)
-                .orElseThrow(() -> new IllegalArgumentException("리뷰를 찾을 수 없습니다. id=" + reviewId));
+            .orElseThrow(() -> new ReviewNotFoundException(reviewId)); // 예외 처리 
         Long bookId = review.getBookId();
         reviewRepository.deleteById(reviewId);
         ratingService.recalculate(bookId);

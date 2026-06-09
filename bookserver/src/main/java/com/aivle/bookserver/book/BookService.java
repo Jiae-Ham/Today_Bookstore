@@ -1,10 +1,13 @@
 package com.aivle.bookserver.book;
 
-import lombok.RequiredArgsConstructor;
+import java.util.List;
+
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.List;
+import com.aivle.bookserver.exception.BookNotFoundException;
+
+import lombok.RequiredArgsConstructor;
 
 @Service
 @RequiredArgsConstructor
@@ -22,7 +25,7 @@ public class BookService {
 
     public Book getBook(Long id) {
         return bookRepository.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException("도서를 찾을 수 없습니다. id=" + id));
+                .orElseThrow(() -> new BookNotFoundException(id)); // 예외 처리
     }
 
     @Transactional
@@ -32,7 +35,7 @@ public class BookService {
 
     @Transactional
     public Book updateBook(Long id, BookUpdateRequest req) {
-        Book book = getBook(id);
+        Book book = getBook(id);    // 예외 처리
         if (req.title()         != null) book.setTitle(req.title());
         if (req.author()        != null) book.setAuthor(req.author());
         if (req.content()       != null) book.setContent(req.content());
@@ -46,7 +49,8 @@ public class BookService {
 
     @Transactional
     public void deleteBook(Long id) {
-        bookRepository.deleteById(id);
+        Book book = getBook(id);        // getBook() 메서드에서 예외 처리
+        bookRepository.delete(book);
     }
 
     public List<Book> getRelatedTop3(Long bookId, String category) {
