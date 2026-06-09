@@ -7,6 +7,7 @@ import com.aivle.bookserver.review.ReviewRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import com.aivle.bookserver.exception.BookNotFoundException;
 
 import java.util.List;
 
@@ -31,7 +32,7 @@ public class RatingService {
     @Transactional
     public void recalculate(Long bookId) {
         Book book = bookRepository.findById(bookId)
-                .orElseThrow(() -> new IllegalArgumentException("도서를 찾을 수 없습니다. id=" + bookId));
+            .orElseThrow(() -> new BookNotFoundException(bookId));  // 예외 처리
 
         List<Review> reviews = reviewRepository.findByBookId(bookId);
 

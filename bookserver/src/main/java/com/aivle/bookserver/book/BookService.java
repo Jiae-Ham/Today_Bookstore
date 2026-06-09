@@ -1,11 +1,15 @@
 package com.aivle.bookserver.book;
 
-import lombok.RequiredArgsConstructor;
+import java.util.List;
+
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.time.LocalDateTime;
+import com.aivle.bookserver.exception.BookNotFoundException;
+
+import lombok.RequiredArgsConstructor;
 
 @Service
 @RequiredArgsConstructor
@@ -24,7 +28,7 @@ public class BookService {
     @Transactional(readOnly = true)
     public Book getBook(Long id) {
         return bookRepository.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException("도서를 찾을 수 없습니다. id=" + id));
+                .orElseThrow(() -> new BookNotFoundException(id)); // 예외 처리
     }
 
     @Transactional
