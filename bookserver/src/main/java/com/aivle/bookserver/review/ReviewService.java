@@ -17,7 +17,8 @@ public class ReviewService {
 
     @Transactional(readOnly = true)
     public List<Review> getReviews(Long bookId) {
-        return reviewRepository.findByBookId(bookId);
+        return reviewRepository.findByBookId(bookId).orElseThrow(()
+            -> new ReviewNotFoundException(bookId));
     }
 
     @Transactional
@@ -38,7 +39,7 @@ public class ReviewService {
     @Transactional
     public void deleteReview(Long reviewId, ReviewDeleteRequest request) {
         Review review = reviewRepository.findById(reviewId)
-                .orElseThrow(() -> new IllegalArgumentException("리뷰를 찾을 수 없습니다. id=" + reviewId));
+                .orElseThrow(() -> new ReviewNotFoundException(reviewId));
         if (!review.getPassword().equals(request.getPassword())) {
             throw new IllegalArgumentException("비밀번호가 일치하지 않습니다.");
         }
