@@ -5,14 +5,15 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.time.LocalDateTime;
 
 @Service
 @RequiredArgsConstructor
-@Transactional(readOnly = true)
 public class BookService {
 
     private final BookRepository bookRepository;
 
+    @Transactional(readOnly = true)
     public List<Book> getBooks(String category) {
         if (category != null && !category.isBlank()) {
             return bookRepository.findByCategory(category);
@@ -20,6 +21,7 @@ public class BookService {
         return bookRepository.findAll();
     }
 
+    @Transactional(readOnly = true)
     public Book getBook(Long id) {
         return bookRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("도서를 찾을 수 없습니다. id=" + id));
@@ -32,7 +34,8 @@ public class BookService {
 
     @Transactional
     public Book updateBook(Long id, BookUpdateRequest req) {
-        Book book = getBook(id);
+        Book book = bookRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("해당 책을 찾을 수 없습니다. id=" + bookId));
+
         if (req.title()         != null) book.setTitle(req.title());
         if (req.author()        != null) book.setAuthor(req.author());
         if (req.content()       != null) book.setContent(req.content());
@@ -41,12 +44,17 @@ public class BookService {
         if (req.avgRating()     != null) book.setAvgRating(req.avgRating());
         if (req.ratePoint()     != null) book.setRatePoint(req.ratePoint());
         if (req.reviewCount()   != null) book.setReviewCount(req.reviewCount());
+        book.setUpdatedAt(LocalDateTime.now());
         return bookRepository.save(book);
     }
 
     @Transactional
     public void deleteBook(Long id) {
-        bookRepository.deleteById(id);
+        if (bookRepository.existsById(id)) {
+            bookRepository.deleteById(id);
+        } else {
+            //throw new BookNotFoundException(id);
+        }
     }
 
     public List<Book> getRelatedTop3(Long bookId, String category) {
