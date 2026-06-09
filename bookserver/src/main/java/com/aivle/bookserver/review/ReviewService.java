@@ -17,8 +17,7 @@ public class ReviewService {
 
     @Transactional(readOnly = true)
     public List<Review> getReviews(Long bookId) {
-        return reviewRepository.findByBookId(bookId).orElseThrow(()
-            -> new ReviewNotFoundException(bookId));
+        return reviewRepository.findByBookId(bookId);
     }
 
     @Transactional
