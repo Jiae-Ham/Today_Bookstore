@@ -38,7 +38,7 @@ public class BookService {
 
     @Transactional
     public Book updateBook(Long id, BookUpdateRequest req) {
-        Book book = bookRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("해당 책을 찾을 수 없습니다. id=" + bookId));
+        Book book = bookRepository.findById(id).orElseThrow(() -> new BookNotFoundException(id));
 
         if (req.title()         != null) book.setTitle(req.title());
         if (req.author()        != null) book.setAuthor(req.author());
