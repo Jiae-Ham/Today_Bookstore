@@ -28,13 +28,9 @@ public class ReviewController {
      * 현재: FE가 클라이언트에서 password 검증 후 호출 → 서버는 단순 삭제
      * BE2 이관 시: 요청에 password 추가하여 서버 검증으로 전환
      */
-    @DeleteMapping("/{id}")
+    @DeleteMapping("/{id}") 
     public ResponseEntity<Void> deleteReview(@PathVariable Long id) {
-        try {
-            reviewService.deleteReview(id);
-            return ResponseEntity.noContent().build();
-        } catch (IllegalArgumentException e) {
-            return ResponseEntity.notFound().build();
-        }
+        reviewService.deleteReview(id); // deleteReview() 예외 처리
+        return ResponseEntity.noContent().build();
     }
 }

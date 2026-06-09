@@ -19,13 +19,10 @@ public class BookController {
         return bookService.getBooks(category);
     }
 
+    // try-catch 대신 getBook() 예외 처리
     @GetMapping("/{id}")
     public ResponseEntity<Book> getBook(@PathVariable Long id) {
-        try {
-            return ResponseEntity.ok(bookService.getBook(id));
-        } catch (IllegalArgumentException e) {
-            return ResponseEntity.notFound().build();
-        }
+        return ResponseEntity.ok(bookService.getBook(id));  // getBook 예외 처리
     }
 
     @PostMapping
@@ -33,14 +30,11 @@ public class BookController {
         return ResponseEntity.status(HttpStatus.CREATED).body(bookService.createBook(book));
     }
 
+    // try-catch 대신 getBook() 예외 처리
     @PatchMapping("/{id}")
     public ResponseEntity<Book> updateBook(@PathVariable Long id,
-                                           @RequestBody BookUpdateRequest req) {
-        try {
-            return ResponseEntity.ok(bookService.updateBook(id, req));
-        } catch (IllegalArgumentException e) {
-            return ResponseEntity.notFound().build();
-        }
+                                        @RequestBody BookUpdateRequest req) {
+        return ResponseEntity.ok(bookService.updateBook(id, req));  // updateBook -> getBook() 메서드에서 예외 처리
     }
 
     @DeleteMapping("/{id}")
@@ -49,13 +43,10 @@ public class BookController {
         return ResponseEntity.noContent().build();
     }
 
+    // try-catch 대신 getBook() 예외 처리
     @GetMapping("/{id}/related")
     public ResponseEntity<List<Book>> getRelated(@PathVariable Long id) {
-        try {
-            Book book = bookService.getBook(id);
-            return ResponseEntity.ok(bookService.getRelatedTop3(id, book.getCategory()));
-        } catch (IllegalArgumentException e) {
-            return ResponseEntity.notFound().build();
-        }
+        Book book = bookService.getBook(id);    // getBook 예외 처리
+        return ResponseEntity.ok(bookService.getRelatedTop3(id, book.getCategory()));
     }
 }
