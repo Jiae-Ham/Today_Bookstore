@@ -1,5 +1,6 @@
 package com.aivle.bookserver.book;
 
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -29,8 +30,8 @@ public class BookController {
     }
 
     @PostMapping
-    public ResponseEntity<Book> createBook(@RequestBody Book book) {
-        return ResponseEntity.status(HttpStatus.CREATED).body(bookService.createBook(book));
+    public ResponseEntity<Book> createBook(@Valid @RequestBody BookUpdateRequest req) {
+        return ResponseEntity.status(HttpStatus.CREATED).body(bookService.createBook(req.toEntity()));
     }
 
     @PatchMapping("/{id}")
