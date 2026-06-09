@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 
 @RestController
@@ -41,8 +42,8 @@ public class BookController {
     }
 
     @PostMapping
-    public ResponseEntity<Book> createBook(@RequestBody Book book) {
-        return ResponseEntity.status(HttpStatus.CREATED).body(bookService.createBook(book));
+    public ResponseEntity<Book> createBook(@Valid @RequestBody BookUpdateRequest req) {
+        return ResponseEntity.status(HttpStatus.CREATED).body(bookService.createBook(req.toEntity()));
     }
 
     // try-catch 대신 getBook() 예외 처리
