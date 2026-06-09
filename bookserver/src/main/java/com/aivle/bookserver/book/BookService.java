@@ -57,6 +57,7 @@ public class BookService {
         }
     }
 
+    @Transactional(readOnly = true)
     public List<Book> getRelatedTop3(Long bookId, String category) {
         return bookRepository.findTop3ByCategoryAndIdNotOrderByRatePointDesc(category, bookId);
     }
