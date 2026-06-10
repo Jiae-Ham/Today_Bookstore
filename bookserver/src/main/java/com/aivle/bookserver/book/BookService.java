@@ -1,7 +1,5 @@
 package com.aivle.bookserver.book;
-
-import java.util.List;
-
+import com.aivle.bookserver.review.ReviewRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -16,6 +14,7 @@ import lombok.RequiredArgsConstructor;
 public class BookService {
 
     private final BookRepository bookRepository;
+    private final ReviewRepository reviewRepository;
 
     @Transactional(readOnly = true)
     public List<Book> getBooks(String category) {
@@ -48,16 +47,17 @@ public class BookService {
         if (req.avgRating()     != null) book.setAvgRating(req.avgRating());
         if (req.ratePoint()     != null) book.setRatePoint(req.ratePoint());
         if (req.reviewCount()   != null) book.setReviewCount(req.reviewCount());
-        book.setUpdatedAt(LocalDateTime.now());
+        
         return bookRepository.save(book);
     }
 
     @Transactional
     public void deleteBook(Long id) {
         if (bookRepository.existsById(id)) {
+            reviewRepository.deleteAllByBookId(id);
             bookRepository.deleteById(id);
         } else {
-            //throw new BookNotFoundException(id);
+            throw new BookNotFoundException(id);
         }
     }
 
