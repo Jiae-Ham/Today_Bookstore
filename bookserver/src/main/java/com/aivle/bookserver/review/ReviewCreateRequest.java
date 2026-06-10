@@ -10,8 +10,12 @@ import lombok.Setter;
 public class ReviewCreateRequest {
     private Long bookId;
     private String nickname;
+    
     @NotBlank
     private String password;
+
+    @Min(value = 1)
+    @Max(value = 5)
     private int rating;
     private String content;
 }
