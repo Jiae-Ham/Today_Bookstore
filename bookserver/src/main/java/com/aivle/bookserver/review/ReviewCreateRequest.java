@@ -1,8 +1,9 @@
 package com.aivle.bookserver.review;
 
 import jakarta.validation.constraints.Max;
-import jakarta.validation.constraints.Min
-import lombok.Getter;
+import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.NotBlank;
+import lombok.*;
 import lombok.Setter;
 
 // 리뷰 등록 시 사용하는 DTO
