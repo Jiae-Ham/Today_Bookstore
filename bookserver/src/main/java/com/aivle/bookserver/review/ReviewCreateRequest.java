@@ -5,7 +5,8 @@ import lombok.Setter;
 
 // 리뷰 등록 시 사용하는 DTO
 @Getter
-@Setter
+@NoArgsConstructor
+@AllArgsConstructor
 public class ReviewCreateRequest {
     private Long bookId;
     private String nickname;
