@@ -24,7 +24,9 @@ public class Review {
 
     @Column(nullable = false)
     private String nickname;
-
+    
+    @NotBlank
+    @Column(nullable = false)
     private String password;
 
     @Column(nullable = false)
