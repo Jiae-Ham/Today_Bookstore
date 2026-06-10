@@ -1,13 +1,20 @@
 package com.aivle.bookserver.book;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Pattern;
 
 public record BookUpdateRequest(
         @NotBlank(message = "제목을 입력해주세요.")
         String title,
         String author,
         String content,
+
+        @Pattern(
+                regexp = "000 총류|100 철학|200 종교|300 사회과학|400 자연과학|500 기술과학|600 예술|700 언어|800 문학",
+                message = "올바른 카테고리를 입력해주세요."
+                )
         String category,
         String coverImageUrl,
 
