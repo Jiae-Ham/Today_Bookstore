@@ -19,8 +19,7 @@ public record BookUpdateRequest(
 
         Integer reviewCount
 ) {
-
-public Book toEntity() {
+    public Book toEntity() {
         return Book.builder()
                 .title(this.title)
                 .author(this.author)
@@ -31,6 +30,6 @@ public Book toEntity() {
                 .ratePoint(0.0)
                 .reviewCount(0)
                 .build();
-        }
+    }
 
 }

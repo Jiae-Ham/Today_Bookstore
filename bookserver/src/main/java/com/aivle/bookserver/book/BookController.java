@@ -5,6 +5,7 @@ import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -51,6 +52,17 @@ public class BookController {
     public ResponseEntity<Book> updateBook(@PathVariable Long id,
                                         @RequestBody BookUpdateRequest req) {
         return ResponseEntity.ok(bookService.updateBook(id, req));  // updateBook -> getBook() 메서드에서 예외 처리
+    }
+
+    // 표지 url 엔드포인트 (미션7)
+    @PatchMapping("/{id}/cover")
+    public ResponseEntity<Book> updateBookCover(@PathVariable Long id,
+                                                @RequestBody Map<String, String> body) {
+        String coverImageUrl = body.get("coverImageUrl");
+        if (coverImageUrl == null) {
+            throw new IllegalArgumentException("coverImageUrl 필드는 필수입니다.");
+        }
+        return ResponseEntity.ok(bookService.updateBookCover(id, coverImageUrl));
     }
 
     @DeleteMapping("/{id}")
