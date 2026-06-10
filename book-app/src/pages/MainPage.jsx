@@ -51,7 +51,7 @@ function MainPage() {
   const recommendedBook = trendingBooks[0];
 
   const recentBooks = [...books]
-    .sort((a, b) => new Date(b.updatedAt) - new Date(a.updatedAt))
+    .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt))
     .slice(0, 5);
 
   const bannerSlides = [
@@ -460,7 +460,7 @@ function MainPage() {
                   marginTop: 4,
                 }}
               >
-                {book.updatedAt
+                {book.createdAt
                   ? new Date(book.updatedAt).toLocaleDateString('ko-KR')
                   : '날짜 없음'}
               </p>
