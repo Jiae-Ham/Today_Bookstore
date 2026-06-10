@@ -45,12 +45,14 @@ npm install
 **2. 터미널 2개를 열어 각각 실행**
 
 ```bash
-# 터미널 1 - json-server (데이터 서버, 포트 3000)
-npx json-server@0.17.4 --watch db.json --port 3000
+# 터미널 1 - Spring Boot 
+cd bookserver
+.\gradlew.bat bootRun
 ```
 
 ```bash
 # 터미널 2 - React 앱 (포트 5173)
+cd book-app
 npm run dev
 ```
 
