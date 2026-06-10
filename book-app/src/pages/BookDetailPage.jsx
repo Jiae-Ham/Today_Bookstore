@@ -94,7 +94,7 @@ function BookDetailPage() {
       });
       if (!res.ok) throw new Error('리뷰 등록에 실패했습니다.');
       const newReview = await res.json();
-      const updatedReviews = [...reviews, newReview];
+      const updatedReviews = [newReview, ...reviews];
       setReviews(updatedReviews);
       await updateRatePoint(updatedReviews);
       setNickname(''); setPassword(''); setRating(5); setContent('');
@@ -163,8 +163,10 @@ function BookDetailPage() {
           <p style={{ color: 'var(--text-muted)', marginBottom: 24 }}>아직 리뷰가 없습니다.</p>
         ) : (
           <ul style={{ listStyle: 'none', marginBottom: 24 }}>
-            {reviews.map((r) => (
-              <li key={r.id} style={{ borderBottom: '1px solid #eee', padding: '12px 0' }}>
+            {[...reviews]
+              .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt))
+              .map((r) => (
+                <li key={r.id} style={{ borderBottom: '1px solid var(--border)', paddingBottom: 16, marginBottom: 16 }}>
                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                   <span style={{ fontWeight: 600 }}>{r.nickname}</span>
                   <div style={{ display: 'flex', gap: 8, alignItems: 'center' }}>
