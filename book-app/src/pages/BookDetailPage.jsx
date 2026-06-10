@@ -166,7 +166,7 @@ function BookDetailPage() {
             {[...reviews]
               .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt))
               .map((r) => (
-                <li key={r.id}>
+                <li key={r.id} style={{ borderBottom: '1px solid var(--border)', paddingBottom: 16, marginBottom: 16 }}>
                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                   <span style={{ fontWeight: 600 }}>{r.nickname}</span>
                   <div style={{ display: 'flex', gap: 8, alignItems: 'center' }}>
