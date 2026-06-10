@@ -8,5 +8,6 @@ import lombok.Setter;
 @NoArgsConstructor
 @AllArgsConstructor
 public class ReviewDeleteRequest {
+    @NotBlank
     private String password;
 }
