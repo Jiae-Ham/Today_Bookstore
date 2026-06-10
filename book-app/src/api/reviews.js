@@ -12,5 +12,9 @@ export const createReview = (data) =>
     body: JSON.stringify(data),
   });
 
-export const deleteReview = (id) =>
-  fetch(`${URL}/${id}`, { method: 'DELETE' });
+export const deleteReview = (id, password) =>
+  fetch(`${URL}/${id}`, {
+    method: 'DELETE',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ password }),
+  });

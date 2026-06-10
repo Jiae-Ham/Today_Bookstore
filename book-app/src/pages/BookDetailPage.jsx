@@ -104,12 +104,12 @@ function BookDetailPage() {
   };
 
   const handleReviewDelete = async (reviewId) => {
-    const target = reviews.find((r) => r.id === reviewId);
-    if (target.password !== deletePassword) { alert('비밀번호가 틀렸습니다.'); return; }
-
-    try {
-      const res = await deleteReview(reviewId);
-      if (!res.ok) throw new Error('삭제에 실패했습니다.');
+    try { //DB로 변경하면서 생기는 오류 처리 => GET으로 처리
+      const res = await deleteReview(reviewId, deletePassword);
+      if (!res.ok) {
+        const errorData = await res.json().catch(() => ({}));
+        throw new Error(errorData.message || '삭제에 실패했습니다. 비밀번호를 확인해주세요.');
+      }
       const updatedReviews = reviews.filter((r) => r.id !== reviewId);
       setReviews(updatedReviews);
       await updateRatePoint(updatedReviews);
