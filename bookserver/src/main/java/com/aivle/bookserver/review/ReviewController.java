@@ -1,11 +1,20 @@
 package com.aivle.bookserver.review;
 
-import lombok.RequiredArgsConstructor;
+import java.util.List;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 
-import java.util.List;
+import jakarta.validation.Valid;
+import lombok.RequiredArgsConstructor;
 
 @RestController
 @RequestMapping("/reviews")
@@ -20,7 +29,7 @@ public class ReviewController {
     }
 
     @PostMapping
-    public ResponseEntity<Review> createReview(@RequestBody ReviewCreateRequest request) {
+    public ResponseEntity<Review> createReview(@Valid @RequestBody ReviewCreateRequest request) {
         // 클라이언트로부터 ReviewCreateRequest DTO를 받아 서비스로 전달합니다.
         Review review = reviewService.createReview(request);
     
@@ -33,7 +42,7 @@ public class ReviewController {
      * BE2 이관 시: 요청에 password 추가하여 서버 검증으로 전환
      */
     @DeleteMapping("/{id}") 
-    public ResponseEntity<Void> deleteReview(@PathVariable Long id, @RequestBody ReviewDeleteRequest request) {
+    public ResponseEntity<Void> deleteReview(@Valid @PathVariable Long id, @RequestBody ReviewDeleteRequest request) {
         reviewService.deleteReview(id, request); // deleteReview() 예외 처리
         return ResponseEntity.noContent().build();
     }
