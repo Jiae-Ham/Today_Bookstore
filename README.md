@@ -32,7 +32,6 @@
 **Backend**<br>
 ![Java 17](https://img.shields.io/badge/Java%2017-007396?style=flat-square&logo=openjdk&logoColor=white)
 ![Spring Boot 406](https://img.shields.io/badge/Spring%20Boot%204.0.6-6DB33F?style=flat-square&logo=springboot&logoColor=white)
-![Spring Security](https://img.shields.io/badge/Spring%20Security-6DB33F?style=flat-square&logo=springsecurity&logoColor=white)
 
 **Database & Infra**<br>
 ![H2 Database](https://img.shields.io/badge/H2%20Database-000000?style=flat-square)
