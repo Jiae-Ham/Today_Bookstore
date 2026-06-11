@@ -1,4 +1,5 @@
 package com.aivle.bookserver.book;
+import com.aivle.bookserver.rating.RatingService;
 import com.aivle.bookserver.review.ReviewRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -15,6 +16,7 @@ public class BookService {
 
     private final BookRepository bookRepository;
     private final ReviewRepository reviewRepository;
+    private final RatingService ratingService;
 
     @Transactional(readOnly = true)
     public List<Book> getBooks(String category) {
@@ -67,6 +69,9 @@ public class BookService {
         if (bookRepository.existsById(id)) {
             reviewRepository.deleteAllByBookId(id);
             bookRepository.deleteById(id);
+            // 삭제 후 나머지 책들의 글로벌 평균 재계산
+            bookRepository.findByAvgRatingGreaterThan(0.0)
+                    .forEach(b -> ratingService.recalculate(b.getId()));
         } else {
             throw new BookNotFoundException(id);
         }
