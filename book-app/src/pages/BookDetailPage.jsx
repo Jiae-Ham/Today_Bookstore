@@ -163,26 +163,78 @@ function BookDetailPage() {
 
         {/* 별점 분포 차트 */}
         {reviews.length > 0 && (() => {
-          const counts = [1, 2, 3, 4, 5].map((star) => reviews.filter((r) => r.rating === star).length);
+          const counts = [1, 2, 3, 4, 5].map((star) =>
+            reviews.filter((r) => r.rating === star).length
+          );
+
           const maxCount = Math.max(...counts, 1);
           const mostStar = counts.indexOf(Math.max(...counts)) + 1;
+
           return (
-            <div style={{ display: 'flex', alignItems: 'flex-end', gap: 12, marginBottom: 24, justifyContent: 'center', height: 140 }}>
-              {[1, 2, 3, 4, 5].map((star) => {
+            <div
+              style={{
+                width: '100%',
+                maxWidth: 620,
+                margin: '0 auto 28px',
+                display: 'flex',
+                flexDirection: 'column',
+                gap: 14,
+              }}
+            >
+              {[5, 4, 3, 2, 1].map((star) => {
                 const count = counts[star - 1];
-                const height = Math.max((count / maxCount) * 110, count > 0 ? 12 : 3);
+                const width = `${(count / maxCount) * 100}%`;
                 const isMax = star === mostStar && count > 0;
+
                 return (
-                  <div key={star} style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 6 }}>
-                    <div style={{
-                      width: 52,
-                      height,
-                      backgroundColor: isMax ? '#f5a623' : '#f5d98b',
-                      borderRadius: '6px 6px 0 0',
-                      transition: 'height 0.3s',
-                    }} />
-                    <span style={{ fontSize: '0.85rem', fontWeight: 600, color: 'var(--text-muted)' }}>{star}점</span>
-                    <span style={{ fontSize: '0.75rem', color: 'var(--text-muted)' }}>{count}개</span>
+                  <div
+                    key={star}
+                    style={{
+                      display: 'grid',
+                      gridTemplateColumns: '42px 1fr 44px',
+                      alignItems: 'center',
+                      gap: 14,
+                    }}
+                  >
+                    <span
+                      style={{
+                        fontSize: '0.95rem',
+                        fontWeight: 700,
+                        color: 'var(--text-muted)',
+                        textAlign: 'right',
+                      }}
+                    >
+                      {star}점
+                    </span>
+
+                    <div
+                      style={{
+                        height: 16,
+                        backgroundColor: 'rgba(245, 217, 139, 0.16)',
+                        borderRadius: 999,
+                        overflow: 'hidden',
+                      }}
+                    >
+                      <div
+                        style={{
+                          width: count > 0 ? width : 0,
+                          height: '100%',
+                          backgroundColor: isMax ? '#f5a623' : '#f5d98b',
+                          borderRadius: 999,
+                          transition: 'width 0.3s ease',
+                        }}
+                      />
+                    </div>
+
+                    <span
+                      style={{
+                        fontSize: '0.9rem',
+                        fontWeight: 600,
+                        color: 'var(--text-muted)',
+                      }}
+                    >
+                      {count}개
+                    </span>
                   </div>
                 );
               })}
