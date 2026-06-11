@@ -23,6 +23,9 @@ function BookDetailPage() {
   const [deletingReviewId, setDeletingReviewId] = useState(null);
   const [deletePassword, setDeletePassword] = useState('');
 
+  // 리뷰 정렬
+  const [reviewSort, setReviewSort] = useState('latest');
+
   useEffect(() => {
     async function fetchData() {
       try {
@@ -158,13 +161,73 @@ function BookDetailPage() {
       <div className="book-detail" style={{ marginTop: 24 }}>
         <h3 style={{ marginBottom: 16 }}>리뷰 ({reviews.length})</h3>
 
+        {/* 별점 분포 차트 */}
+        {reviews.length > 0 && (() => {
+          const counts = [1, 2, 3, 4, 5].map((star) => reviews.filter((r) => r.rating === star).length);
+          const maxCount = Math.max(...counts, 1);
+          const mostStar = counts.indexOf(Math.max(...counts)) + 1;
+          return (
+            <div style={{ display: 'flex', alignItems: 'flex-end', gap: 12, marginBottom: 24, justifyContent: 'center', height: 140 }}>
+              {[1, 2, 3, 4, 5].map((star) => {
+                const count = counts[star - 1];
+                const height = Math.max((count / maxCount) * 110, count > 0 ? 12 : 3);
+                const isMax = star === mostStar && count > 0;
+                return (
+                  <div key={star} style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 6 }}>
+                    <div style={{
+                      width: 52,
+                      height,
+                      backgroundColor: isMax ? '#f5a623' : '#f5d98b',
+                      borderRadius: '6px 6px 0 0',
+                      transition: 'height 0.3s',
+                    }} />
+                    <span style={{ fontSize: '0.85rem', fontWeight: 600, color: 'var(--text-muted)' }}>{star}점</span>
+                    <span style={{ fontSize: '0.75rem', color: 'var(--text-muted)' }}>{count}개</span>
+                  </div>
+                );
+              })}
+            </div>
+          );
+        })()}
+
+        {/* 정렬 필터 버튼 */}
+        {reviews.length > 0 && (
+          <div style={{ display: 'flex', gap: 8, marginBottom: 16 }}>
+            {[
+              { key: 'latest', label: '최신순' },
+              { key: 'high', label: '별점 높은순' },
+              { key: 'low', label: '별점 낮은순' },
+            ].map(({ key, label }) => (
+              <button
+                key={key}
+                onClick={() => setReviewSort(key)}
+                style={{
+                  padding: '6px 14px',
+                  fontSize: '0.85rem',
+                  borderRadius: 20,
+                  border: '1px solid var(--border)',
+                  cursor: 'pointer',
+                  backgroundColor: reviewSort === key ? '#f5a623' : 'var(--card-bg)',
+                  color: reviewSort === key ? '#fff' : 'var(--text-main)',
+                  fontWeight: 700,
+                  border: reviewSort === key ? '2px solid #e09400' : '1px solid var(--border)',
+                }}
+              >{label}</button>
+            ))}
+          </div>
+        )}
+
         {/* 리뷰 목록 */}
         {reviews.length === 0 ? (
           <p style={{ color: 'var(--text-muted)', marginBottom: 24 }}>아직 리뷰가 없습니다.</p>
         ) : (
           <ul style={{ listStyle: 'none', marginBottom: 24 }}>
             {[...reviews]
-              .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt))
+              .sort((a, b) => {
+                if (reviewSort === 'high') return b.rating !== a.rating ? b.rating - a.rating : new Date(b.createdAt) - new Date(a.createdAt);
+                if (reviewSort === 'low')  return a.rating !== b.rating ? a.rating - b.rating : new Date(b.createdAt) - new Date(a.createdAt);
+                return new Date(b.createdAt) - new Date(a.createdAt);
+              })
               .map((r) => (
                 <li key={r.id} style={{ borderBottom: '1px solid var(--border)', paddingBottom: 16, marginBottom: 16 }}>
                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
