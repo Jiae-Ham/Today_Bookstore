@@ -200,7 +200,7 @@ $$rate\_point = \text{round}\left(\frac{C \times m + ratingSum}{C + reviewCount}
 - **해결 방안:** 모든 예외를 포괄하는 최상위 `Exception.class` 핸들러를 추가. 에러 상세 로그는 서버 콘솔에만 남기고, 클라이언트에게는 내부 시스템 구조를 숨긴 채 규격화된 `500 Internal Server Error` JSON 형식으로 응답하도록 구조 개선.
 </details>
 
-> 🔗 **더 많은 트러블 슈팅 과정과 기술적 고민은 [팀 프로젝트 노션](https://app.notion.com/p/37c55c159ec3807b9d13ded76c995b85?source=copy_link)에서 확인하실 수 있습니다.**
+> 🔗 **더 많은 트러블 슈팅 과정과 기술적 고민은 [팀 프로젝트 노션(트러블 슈팅)](https://app.notion.com/p/37c55c159ec3807b9d13ded76c995b85?source=copy_link)에서 확인하실 수 있습니다.**
 
 ---
 
