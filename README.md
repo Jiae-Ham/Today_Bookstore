@@ -1,159 +1,243 @@
-# 도서관리 시스템
+# 📚 오늘의 서재 (Full-Stack Book Management System)
 
-AI 표지 생성을 지원하는 도서관리 웹 애플리케이션입니다.
+**AI 표지 생성 기능과 베이지안 평점 기반의 객관적인 도서 추천 시스템을 갖춘 풀스택 웹 애플리케이션입니다.**
 
-## 기술 스택
+- **개발 인원:** 팀 프로젝트 (총 8인)
+- **개발 기간:** 2026.06.08 ~ 2026.06.12
 
-| 구분 | 기술 |
-|---|---|
-| 프론트엔드 | React 19 + Vite |
-| 라우팅 | react-router-dom |
-| 로컬 API 서버 | json-server 0.17.4 |
-| AI 이미지 생성 | OpenAI Images API (gpt-image-2) |
+---
 
-## 서비스 구조
+## 👥 팀원 역할 및 분담 (R&R)
 
+| 이름 | 역할 (Position) | 세부 담당 업무 (Responsibility) |
+| :---: | :--- | :--- |
+| **함지애** | **조장 / PM** | **[PM·기획]** ERD / API 명세서 작성, 통합 이슈 추적<br>**[프론트엔드]** CRUD API 연동 |
+| **박진용** | **BE / FE / 발표** | **[백엔드]** Entity, Repository 작성, H2 콘솔 확인, Lombok 4종 적용<br>**[프론트엔드]** 스타일링, QA<br>**[공통]** 프로젝트 발표 (백엔드 파트) |
+| **장윤재** | **BE / FE** | **[백엔드]** Service 클래스, 비즈니스 로직, NotFoundException, @Transactional<br>**[프론트엔드]** OpenAI API 연동 |
+| **성예은** | **BE / FE** | **[백엔드]** Controller, 5종 CRUD 엔드포인트, @Valid + @NotBlank, Postman 테스트<br>**[프론트엔드]** UI, 레이아웃 구현 |
+| **손진원** | **BE / FE** | **[통합·예외 처리]** Webconfig (CORS), GlobalExceptionHandler, 풀스택 디버깅, 트러블슈팅 정리<br>**[프론트엔드]** UI, 레이아웃 구현 |
+| **김현석** | **통합 / 발표** | **[AI·DB 연동]** Frontend 코드 분석, fetch URL 변경, OpenAI 표지 흐름, E2E 시연 준비, DB(Supabase) 연결<br>**[공통]** 프로젝트 발표 (프론트엔드 파트) |
+| **김만서** | **FE / QA / 서기** | **[서기·문서]** 회의록 작성 및 내용 정리, Postman 테스트 및 QA<br>**[프론트엔드]** OpenAI API 연동 |
+| **공다연** | **기획 / 문서** | **[발표자료 정리·문서]** 내용 정리, 프로젝트 발표 자료 기획 및 시각 자료 생성 |
+
+---
+
+## 🛠 Tech Stack
+
+**Frontend**<br>
+![React](https://img.shields.io/badge/React%2019-20232A?style=flat-square&logo=react&logoColor=61DAFB)
+![Vite](https://img.shields.io/badge/Vite-646CFF?style=flat-square&logo=vite&logoColor=white)
+![React Router](https://img.shields.io/badge/React_Router-CA4245?style=flat-square&logo=react-router&logoColor=white)
+
+**Backend**<br>
+![Java 17](https://img.shields.io/badge/Java%2017-007396?style=flat-square&logo=openjdk&logoColor=white)
+![Spring Boot 406](https://img.shields.io/badge/Spring%20Boot%204.0.6-6DB33F?style=flat-square&logo=springboot&logoColor=white)
+![Spring Security](https://img.shields.io/badge/Spring%20Security-6DB33F?style=flat-square&logo=springsecurity&logoColor=white)
+
+**Database & Infra**<br>
+![H2 Database](https://img.shields.io/badge/H2%20Database-000000?style=flat-square)
+![PostgreSQL](https://img.shields.io/badge/PostgreSQL-336791?style=flat-square&logo=postgresql&logoColor=white)
+![Supabase](https://img.shields.io/badge/Supabase-3ECF8E?style=flat-square&logo=supabase&logoColor=white)
+
+💡 **DB 설정 안내:** 본 프로젝트의 메인 DB는 Supabase(PostgreSQL)로 구성되어 있습니다. 별도의 Supabase 계정 연동 없이 로컬에서 간편하게 실행하시려면, 백엔드 설정을 개발용 H2 DB(In-memory)로 변경해 주셔야 합니다.
+
+**Tools & External API**<br>
+![OpenAI](https://img.shields.io/badge/OpenAI%20API-412991?style=flat-square&logo=openai&logoColor=white)
+![Postman](https://img.shields.io/badge/Postman-FF6C37?style=flat-square&logo=postman&logoColor=white)
+![Gradle](https://img.shields.io/badge/Gradle-02303A?style=flat-square&logo=gradle&logoColor=white)
+
+---
+
+## ✨ 주요 기능
+
+### 1. 도서 관리 (CRUD) 및 카테고리 필터링
+
+- 도서 등록, 수정, 삭제 및 상세 조회 기능
+- KDC(한국십진분류법) 기반 카테고리(000~800) 지정 및 목록 필터링 기능
+
+### 2. AI 표지 생성 (OpenAI API)
+
+도서 등록 및 수정 페이지에서 `gpt-image-2` 모델을 활용하여 내용 기반의 표지 이미지를 자동 생성합니다.
+
+- 사용자는 품질(Low/Medium/High)을 선택할 수 있으며, API Key는 서버로 전송되지 않고 브라우저(Local)에서만 안전하게 사용됩니다.
+
+### 3. 리뷰 및 별점 관리
+
+- 도서마다 1~5점의 별점과 리뷰를 등록할 수 있습니다.
+- 닉네임과 비밀번호를 기반으로 작성자를 식별하며, 서버 단에서 비밀번호 검증 후 리뷰를 삭제하는 보안 로직이 적용되어 있습니다.
+
+### 4. 베이지안 평점 기반 도서 추천
+
+단순 평균 별점 산출 시 발생할 수 있는 통계적 왜곡(예: 리뷰 1개인 5점 도서가 우선 노출되는 현상)을 방지하기 위해 **베이지안 평점**을 도입했습니다.
+
+- **메인 페이지:** 베이지안 점수 1위 도서 및 화제작 Best 3 노출
+- **상세 페이지:** 동일 카테고리 내 추천 도서 자동 매칭
+
+### 5. 사용자 맞춤 테마
+
+- 우측 상단 팔레트에서 5가지 색상 테마로 UI를 변경할 수 있으며, 선택 값은 `localStorage`에 저장되어 유지됩니다.
+
+---
+
+## 🖥 주요 화면
+
+<table width="100%">
+  <tr>
+    <td><img src="./book-app/screenshots/메인페이지.png" height="400" alt="메인 페이지"></td>
+    <td><img src="./book-app/screenshots/도서목록페이지.png" height="400" alt="도서 목록"></td>
+    <td><img src="./book-app/screenshots/도서목록페이지-최신순.png" height="400" alt="도서 목록 최신순"></td>
+    <td><img src="./book-app/screenshots/도서상세페이지.png" height="400" alt="도서 상세"></td>
+    <td><img src="./book-app/screenshots/도서등록페이지.png" height="400" alt="도서 등록"></td>
+    <td><img src="./book-app/screenshots/도서수정페이지.png" height="400" alt="도서 수정"></td>
+  </tr>
+  <tr>
+    <td align="center"><b>메인 페이지</b></td>
+    <td align="center"><b>도서 목록</b></td>
+    <td align="center"><b>도서 목록 (최신순)</b></td>
+    <td align="center"><b>도서 상세</b></td>
+    <td align="center"><b>도서 등록</b></td>
+    <td align="center"><b>도서 수정</b></td>
+  </tr>
+</table>
+
+---
+
+## ⚙️ 시스템 구조 (Architecture)
+
+### 백엔드 (Spring Boot)
+
+Package by Feature 구조 형식을 사용하여 도메인 단위로 패키지를 분리 및 관리합니다.
+
+```text
+📦 src/main/java/com/aivle/bookserver
+ ┣ 📂 book        # 도서 관련 비즈니스 로직 (Controller, Service, Repository, DTO)
+ ┣ 📂 review      # 리뷰 관련 비즈니스 로직
+ ┣ 📂 rating      # 베이지안 평점 계산을 위한 공통 로직
+ ┣ 📂 config      # CORS 정책 및 DB 초기화 설정
+ ┗ 📂 exception   # 전역 예외 처리 및 커스텀 예외
 ```
-book-app/
-├── public/
-├── src/
-│   ├── api/
-│   │   ├── config.js        # BASE_URL 설정
-│   │   ├── books.js         # 도서 API
-│   │   └── reviews.js       # 리뷰 API
-│   ├── components/
-│   │   └── Header.jsx       # 네비게이션 바 + 테마 설정
-│   ├── pages/
-│   │   ├── MainPage.jsx     # 메인 (추천/화제작/신규 도서)
-│   │   ├── BookListPage.jsx # 도서 목록 + 카테고리 필터
-│   │   ├── BookDetailPage.jsx  # 도서 상세 + 리뷰 + 연관 추천
-│   │   └── BookFormPage.jsx # 도서 등록 / 수정 + AI 표지 생성
-│   ├── App.jsx
-│   └── App.css
-├── db.json                  # json-server 데이터
-└── package.json
+
+### 프론트엔드 (React)
+
+```text
+📦 book-app/src
+ ┣ 📂 api         # Spring Boot 서버 통신 (config.js, books.js, reviews.js)
+ ┣ 📂 components  # 공통 컴포넌트 (Header, 테마 설정 등)
+ ┣ 📂 pages       # 페이지 단위 컴포넌트 (Main, BookList, BookDetail, BookForm)
+ ┗ 📜 App.jsx     # 라우팅 설정
 ```
 
-## 실행 방법
+---
 
-**1. 패키지 설치 (최초 1회)**
+## 🗄 데이터베이스 설계 (ERD)
+
+조회 성능을 극대화하기 위해 `BOOK` 테이블에 리뷰 관련 통계(평균 별점, 리뷰 수 등)를 포함하는 **반정규화**를 적용했습니다.
+
+![ERD 이미지](https://github.com/user-attachments/assets/8b400112-ebf1-4632-921c-2b7269337944)
+
+---
+
+## 🔌 API 명세서 (API Reference)
+
+### 📌 서버 기본 환경
+
+- **Base URL:** `http://localhost:8080`
+- **Database:** Production: Supabase (PostgreSQL) / Local: H2 In-memory
+
+### 📚 도서 및 리뷰 API (Spring Boot)
+
+| Domain | Method | Endpoint | 기능 | Request | Response |
+| --- | --- | --- | --- | --- | --- |
+| **Books** | **GET** | `/books` | 도서 목록 조회 | `[Query]` category (선택) | 200 (Book List) |
+|     | **GET** | `/books/{id}` | 도서 상세 조회 | -   | 200 (Book) / 404 |
+|     | **POST** | `/books` | 도서 등록 | `[Body]` title(필수), author, content... | 201 (Created) / 400 |
+|     | **PATCH** | `/books/{id}` | 도서 부분 수정 | `[Body]` 수정할 필드만 전달 | 200 (Updated) / 400 |
+|     | **PATCH** | `/books/{id}/cover` | AI 표지 이미지 저장 | `[Body]` coverImageUrl(필수) | 200 (Updated) / 400 |
+|     | **DELETE** | `/books/{id}` | 도서 삭제 | -   | 204 (No Content) / 404 |
+|     | **GET** | `/books/{id}/related` | 카테고리 추천 Top 3 | -   | 200 (Book List) / 404 |
+| **Reviews** | **GET** | `/reviews` | 리뷰 목록 조회 | `[Query]` bookId(필수) | 200 (Review List) |
+|     | **POST** | `/reviews` | 리뷰 등록 | `[Body]` bookId, nickname, password, rating (모두 필수) | 201 (Created) / 400 |
+|     | **DELETE** | `/reviews/{id}` | 리뷰 삭제 | `[Body]` password(필수) | 204 (No Content) / 400 / 404 |
+
+### 🤖 외부 API (OpenAI)
+
+| 기능 | Method | Endpoint |
+| --- | --- | --- |
+| AI 표지 이미지 생성 | **POST** | `https://api.openai.com/v1/images/generations` |
+
+---
+
+## ⭐ 도서 평점 계산 로직 (Bayesian Rating System)
+
+$$rate\_point = \text{round}\left(\frac{C \times m + ratingSum}{C + reviewCount}, 1\right)$$
+
+- $C$: 최소 투표 수 (고정값 5)
+- $m$: 평점이 존재하는 전체 도서의 평균 별점 (데이터가 없을 시 초기값 3.5 적용)
+- $ratingSum$: 해당 도서가 받은 별점의 총합
+- $reviewCount$: 해당 도서의 총 리뷰 수
+
+> **💡 Note:** 리뷰 등록 및 삭제 API 호출 시, 서버 내부 로직에 의해 베이지안 평점이 자동 재계산되어 DB에 동기화됩니다.
+
+---
+
+## 🔥 트러블 슈팅 (Troubleshooting)
+
+<details>
+<summary><b>1. 프레임워크 기본값과 클라우드 환경의 충돌: DB 커넥션 풀 고갈 이슈</b></summary>
+<br>
+
+- **문제 상황:** 로컬 환경과 달리 Supabase 연동 후 3명 이상의 팀원이 동시 접속 시 서버가 멈추거나 DB 연결 에러 발생.
+- **원인 파악:** Spring Boot의 기본 DB 커넥션 풀(HikariCP)은 기동 시 10개의 커넥션을 선점함. Supabase 무료 티어의 제한된 허용 커넥션 수를 팀원들의 각 로컬 서버가 순식간에 고갈시킨 것이 원인.
+- **해결 방안:** `application.yaml`에서 HikariCP의 `maximum-pool-size`를 `1`로 과감히 제한. 불필요한 여유 커넥션 점유를 막아 최대 15명이 동시에 안정적으로 접속할 수 있도록 인프라 환경 최적화.
+</details>
+
+<details>
+<summary><b>2. 서버 내부 정보 노출 방지: Fallback 전역 예외 처리 도입</b></summary>
+<br>
+
+- **문제 상황:** 개발자가 예측하지 못한 서버 에러(DB 제약조건 위배 등) 발생 시, 클라이언트 화면에 서버의 전체 스택 트레이스(Stack Trace)가 노출되는 보안 취약점 발견.
+- **원인 파악:** `GlobalExceptionHandler`에 특정 커스텀 예외들만 등록되어 있어, 지정되지 않은 예외를 최종적으로 잡아내는 방어막(Fallback) 로직이 부재했음.
+- **해결 방안:** 모든 예외를 포괄하는 최상위 `Exception.class` 핸들러를 추가. 에러 상세 로그는 서버 콘솔에만 남기고, 클라이언트에게는 내부 시스템 구조를 숨긴 채 규격화된 `500 Internal Server Error` JSON 형식으로 응답하도록 구조 개선.
+</details>
+
+> 🔗 **더 많은 트러블 슈팅 과정과 기술적 고민은 [팀 프로젝트 노션(트러블 슈팅)](https://app.notion.com/p/37c55c159ec3807b9d13ded76c995b85?source=copy_link)에서 확인하실 수 있습니다.**
+
+---
+
+## 🚀 실행 가이드 (Getting Started)
+
+프로젝트 클론 후 프론트엔드와 백엔드를 각각 실행해야 합니다.
+
+**1. 저장소 클론**
+
 ```bash
-cd book-app
-npm install
+git clone [https://github.com/Jiae-Ham/AivleSchool_miniproj4.git](https://github.com/Jiae-Ham/AivleSchool_miniproj4.git)
 ```
 
-**2. 터미널 2개를 열어 각각 실행**
+**2. 백엔드 실행 (Spring Boot)**
 
-```bash
-# 터미널 1 - Spring Boot 
-cd bookserver
-.\gradlew.bat bootRun
-```
+-💡 데이터베이스 설정 안내
+본 프로젝트는 현재 별도로 서버에 배포되어 있지 않습니다. 따라서 프로젝트를 직접 실행하고 테스트하실 분들은 개발 및 로컬 환경 전용인 H2 DB(In-memory)로 연결하여 실행하시는 것을 권장합니다.
 
-```bash
-# 터미널 2 - React 앱 (포트 5173)
-cd book-app
-npm run dev
-```
+※ 만약 Supabase(PostgreSQL)를 사용하시려면, 본인의 Supabase 계정 정보를 .env 파일과 application.yaml에 직접 입력하여 연동해야 합니다.
+  
+  ```bash
+  cd AivleSchool_miniproj4/bookserver
+  ./gradlew build
+  ./gradlew bootRun
+  ```
+  
 
-**3. 브라우저에서 접속**
-```
-http://localhost:5173
-```
+**3. 프론트엔드 실행 (React)**
 
-## 주요 기능
+- 새로운 터미널 창을 열고 프론트엔드 디렉터리로 이동하여 패키지를 설치합니다.
+  
+  ```bash
+  cd AivleSchool_miniproj4/book-app
+  npm install
+  npm run dev
+  ```
+  
+**4. 접속**
 
-### 도서 CRUD
-- 도서 목록 조회 / 카테고리 필터링
-- 도서 상세 조회
-- 도서 등록 / 수정 / 삭제
-
-### AI 표지 생성 (OpenAI)
-도서 등록 및 수정 페이지에서 AI로 표지 이미지를 자동 생성할 수 있습니다.
-
-1. 제목과 내용을 먼저 입력합니다.
-2. 좌측 패널에 OpenAI API Key(`sk-...`)를 입력합니다.
-3. 품질을 선택합니다. (`low` / `medium` / `high`)
-4. **AI 표지 생성** 버튼을 클릭합니다.
-5. 생성된 이미지를 확인한 뒤 **등록** 또는 **저장** 버튼을 누릅니다.
-
-> 사용 모델: `gpt-image-2` / 출력 크기: `1024x1536`  
-> API Key는 서버로 전송되지 않으며 브라우저에서만 사용됩니다.
-
-### 카테고리 기능
-- 도서 등록 시 KDC(한국십진분류법) 기반 카테고리 지정
-- 목록 페이지에서 카테고리 필터링
-
-| 카테고리 |
-|---|
-| 000 총류 |
-| 100 철학 |
-| 200 종교 |
-| 300 사회과학 |
-| 400 자연과학 |
-| 500 기술과학 |
-| 600 예술 |
-| 700 언어 |
-| 800 문학 |
-
-### 리뷰 및 별점 기능
-- 도서마다 별점(1~5) 등록 및 조회
-- 닉네임 + 비밀번호 기반 리뷰 작성 / 삭제
-
-### 추천 기능
-- **메인 페이지**: 베이지안 평균 점수 1위 도서를 추천 도서로 표시
-- **화제작 Best 3**: 베이지안 평균 점수 상위 3개 도서 표시
-- **상세 페이지**: 같은 카테고리 도서 자동 추천
-
-> 베이지안 평균 공식: `score = (C × m + avg_rating × n) / (C + n)`  
-> `m` = 전체 평균 평점, `C` = 전체 평균 리뷰 수, `n` = 해당 도서 리뷰 수
-
-### 테마
-우측 상단 팔레트에서 5가지 색상 테마 변경 가능 (선택값 localStorage 저장)
-
-## 주요 화면
-
-### 메인 페이지
-<img src="./book-app/screenshots/메인페이지.png" width="700" alt="메인 페이지">
-
-### 도서 목록
-<img src="./book-app/screenshots/도서목록페이지.png" width="700" alt="도서 목록">
-
-### 도서 목록 (최신순)
-<img src="./book-app/screenshots/도서목록페이지-최신순.png" width="700" alt="도서 목록 최신순">
-
-### 도서 상세
-<img src="./book-app/screenshots/도서상세페이지.png" width="700" alt="도서 상세">
-
-### 도서 등록
-<img src="./book-app/screenshots/도서등록페이지.png" width="700" alt="도서 등록">
-
-### 도서 수정
-<img src="./book-app/screenshots/도서수정페이지.png" width="700" alt="도서 수정">
-
-## API 엔드포인트
-
-### 도서 API (json-server)
-
-| 기능 | Method | 엔드포인트 |
-|---|---|---|
-| 도서 전체 목록 조회 | GET | `/books` |
-| 카테고리별 도서 조회 | GET | `/books?category={category}` |
-| 도서 상세 조회 | GET | `/books/:id` |
-| 도서 등록 | POST | `/books` |
-| 도서 수정 | PATCH | `/books/:id` |
-| 도서 삭제 | DELETE | `/books/:id` |
-
-### 리뷰 API (json-server)
-
-| 기능 | Method | 엔드포인트 |
-|---|---|---|
-| 도서별 리뷰 목록 조회 | GET | `/reviews?bookId={id}` |
-| 리뷰 등록 | POST | `/reviews` |
-| 리뷰 삭제 | DELETE | `/reviews/:id` |
-
-### 외부 API
-
-| 기능 | Method | 엔드포인트 |
-|---|---|---|
-| AI 표지 이미지 생성 | POST | `https://api.openai.com/v1/images/generations` |
+- 브라우저에서 `http://localhost:5173` 으로 접속하여 서비스를 이용합니다.
