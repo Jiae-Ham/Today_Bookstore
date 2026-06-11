@@ -7,6 +7,21 @@
 
 ---
 
+## 👥 팀원 역할 및 분담 (R&R)
+
+| 이름 | 역할 (Position) | 세부 담당 업무 (Responsibility) |
+| :---: | :--- | :--- |
+| **함지애** | **조장 / PM** | **[PM·기획]** ERD / API 명세서 작성, 통합 이슈 추적<br>**[프론트엔드]** CRUD API 연동 |
+| **박진용** | **BE / FE / 발표** | **[백엔드]** Entity, Repository 작성, H2 콘솔 확인, Lombok 4종 적용<br>**[프론트엔드]** 스타일링, QA<br>**[공통]** 프로젝트 발표 (백엔드 파트) |
+| **장윤재** | **BE / FE** | **[백엔드]** Service 클래스, 비즈니스 로직, NotFoundException, @Transactional<br>**[프론트엔드]** OpenAI API 연동 |
+| **성예은** | **BE / FE** | **[백엔드]** Controller, 5종 CRUD 엔드포인트, @Valid + @NotBlank, Postman 테스트<br>**[프론트엔드]** UI, 레이아웃 구현 |
+| **손진원** | **BE / FE** | **[통합·예외 처리]** Webconfig (CORS), GlobalExceptionHandler, 풀스택 디버깅, 트러블슈팅 정리<br>**[프론트엔드]** UI, 레이아웃 구현 |
+| **김현석** | **통합 / 발표** | **[AI·DB 연동]** Frontend 코드 분석, fetch URL 변경, OpenAI 표지 흐름, E2E 시연 준비, DB(Supabase) 연결<br>**[공통]** 프로젝트 발표 (프론트엔드 파트) |
+| **김만서** | **FE / QA / 서기** | **[서기·문서]** 회의록 작성 및 내용 정리, Postman 테스트 및 QA<br>**[프론트엔드]** OpenAI API 연동 |
+| **공다연** | **기획 / 문서** | **[발표자료 정리·문서]** 내용 정리, 프로젝트 발표 자료 기획 및 시각 자료 생성 |
+
+---
+
 ## 🛠 Tech Stack
 
 **Frontend**<br>
@@ -165,6 +180,30 @@ $$rate\_point = \text{round}\left(\frac{C \times m + ratingSum}{C + reviewCount}
 
 ---
 
+## 🔥 트러블 슈팅 (Troubleshooting)
+
+<details>
+<summary><b>1. 프레임워크 기본값과 클라우드 환경의 충돌: DB 커넥션 풀 고갈 이슈</b></summary>
+<br>
+
+- **문제 상황:** 로컬 환경과 달리 Supabase 연동 후 3명 이상의 팀원이 동시 접속 시 서버가 멈추거나 DB 연결 에러 발생.
+- **원인 파악:** Spring Boot의 기본 DB 커넥션 풀(HikariCP)은 기동 시 10개의 커넥션을 선점함. Supabase 무료 티어의 제한된 허용 커넥션 수를 팀원들의 각 로컬 서버가 순식간에 고갈시킨 것이 원인.
+- **해결 방안:** `application.yaml`에서 HikariCP의 `maximum-pool-size`를 `1`로 과감히 제한. 불필요한 여유 커넥션 점유를 막아 최대 15명이 동시에 안정적으로 접속할 수 있도록 인프라 환경 최적화.
+</details>
+
+<details>
+<summary><b>2. 서버 내부 정보 노출 방지: Fallback 전역 예외 처리 도입</b></summary>
+<br>
+
+- **문제 상황:** 개발자가 예측하지 못한 서버 에러(DB 제약조건 위배 등) 발생 시, 클라이언트 화면에 서버의 전체 스택 트레이스(Stack Trace)가 노출되는 보안 취약점 발견.
+- **원인 파악:** `GlobalExceptionHandler`에 특정 커스텀 예외들만 등록되어 있어, 지정되지 않은 예외를 최종적으로 잡아내는 방어막(Fallback) 로직이 부재했음.
+- **해결 방안:** 모든 예외를 포괄하는 최상위 `Exception.class` 핸들러를 추가. 에러 상세 로그는 서버 콘솔에만 남기고, 클라이언트에게는 내부 시스템 구조를 숨긴 채 규격화된 `500 Internal Server Error` JSON 형식으로 응답하도록 구조 개선.
+</details>
+
+> 🔗 **더 많은 트러블 슈팅 과정과 기술적 고민은 [팀 프로젝트 노션(https://app.notion.com/p/37c55c159ec3807b9d13ded76c995b85?source=copy_link)](#)에서 확인하실 수 있습니다.**
+
+---
+
 ## 🚀 실행 가이드 (Getting Started)
 
 프로젝트 클론 후 프론트엔드와 백엔드를 각각 실행해야 합니다.
@@ -199,7 +238,6 @@ git clone [https://github.com/Jiae-Ham/AivleSchool_miniproj4.git](https://github
   npm run dev
   ```
   
-
 **4. 접속**
 
 - 브라우저에서 `http://localhost:5173` 으로 접속하여 서비스를 이용합니다.
