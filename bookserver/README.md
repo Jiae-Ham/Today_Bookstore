@@ -7,17 +7,17 @@
 ## 🛠 Tech Stack
 
 **Backend**<br>
-<img src="[https://img.shields.io/badge/Java](https://img.shields.io/badge/Java) 17-007396?style=flat-square&logo=OpenJDK&logoColor=white"/>
-<img src="[https://img.shields.io/badge/Spring](https://img.shields.io/badge/Spring) Boot 4.0.6-6DB33F?style=flat-square&logo=Spring Boot&logoColor=white"/>
-<img src="[https://img.shields.io/badge/Spring](https://img.shields.io/badge/Spring) Security-6DB33F?style=flat-square&logo=Spring Security&logoColor=white"/>
+![Java 17](https://img.shields.io/badge/Java%2017-007396?style=flat-square&logo=openjdk&logoColor=white)
+![Spring Boot 4.0.6](https://img.shields.io/badge/Spring%20Boot%204.0.6-6DB33F?style=flat-square&logo=springboot&logoColor=white)
+![Spring Security](https://img.shields.io/badge/Spring%20Security-6DB33F?style=flat-square&logo=springsecurity&logoColor=white)
 
 **Database & Infra**<br>
-<img src="[https://img.shields.io/badge/H2](https://img.shields.io/badge/H2) Database-000000?style=flat-square"/>
-<img src="[https://img.shields.io/badge/Supabase-3ECF8E?style=flat-square&logo=Supabase&logoColor=white](https://img.shields.io/badge/Supabase-3ECF8E?style=flat-square&logo=Supabase&logoColor=white)"/>
+![H2 Database](https://img.shields.io/badge/H2%20Database-000000?style=flat-square)
+![Supabase](https://img.shields.io/badge/Supabase-3ECF8E?style=flat-square&logo=supabase&logoColor=white)
 
 **Tools**<br>
-<img src="[https://img.shields.io/badge/Postman-FF6C37?style=flat-square&logo=Postman&logoColor=white](https://img.shields.io/badge/Postman-FF6C37?style=flat-square&logo=Postman&logoColor=white)"/>
-<img src="[https://img.shields.io/badge/Gradle-02303A?style=flat-square&logo=Gradle&logoColor=white](https://img.shields.io/badge/Gradle-02303A?style=flat-square&logo=Gradle&logoColor=white)"/>
+![Postman](https://img.shields.io/badge/Postman-FF6C37?style=flat-square&logo=postman&logoColor=white)
+![Gradle](https://img.shields.io/badge/Gradle-02303A?style=flat-square&logo=gradle&logoColor=white)
 
 **Dependencies**
 - Spring Web, Spring Security
