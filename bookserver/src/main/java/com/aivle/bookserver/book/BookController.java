@@ -1,9 +1,13 @@
 package com.aivle.bookserver.book;
 
+import java.net.URI;
 import java.net.http.HttpClient;
+import java.net.http.HttpRequest;
+import java.net.http.HttpResponse;
 import java.util.List;
 import java.util.Map;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -18,7 +22,9 @@ import org.springframework.web.bind.annotation.RestController;
 
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
 @RestController
 @RequestMapping("/books")
 @RequiredArgsConstructor
@@ -27,15 +33,17 @@ public class BookController {
     private final BookService bookService;
     private static final HttpClient httpClient = HttpClient.newHttpClient();
 
+    @Value("${openai.api-key}")
+    private String openaiApiKey;
+
     @GetMapping
     public List<Book> getBooks(@RequestParam(required = false) String category) {
         return bookService.getBooks(category);
     }
 
-    // try-catch 대신 getBook() 예외 처리
     @GetMapping("/{id}")
     public ResponseEntity<Book> getBook(@PathVariable Long id) {
-        return ResponseEntity.ok(bookService.getBook(id));  // getBook 예외 처리
+        return ResponseEntity.ok(bookService.getBook(id));
     }
 
     @PostMapping
@@ -46,17 +54,15 @@ public class BookController {
         return ResponseEntity.status(HttpStatus.CREATED).body(bookService.createBook(req.toEntity()));
     }
 
-    // try-catch 대신 getBook() 예외 처리
     @PatchMapping("/{id}")
-    public ResponseEntity<Book> updateBook(@PathVariable Long id, 
+    public ResponseEntity<Book> updateBook(@PathVariable Long id,
                                                 @Valid @RequestBody BookUpdateRequest req) {
-        return ResponseEntity.ok(bookService.updateBook(id, req));  // updateBook -> getBook() 메서드에서 예외 처리
+        return ResponseEntity.ok(bookService.updateBook(id, req));
     }
 
-    // 표지 url 엔드포인트 (미션7)
     @PatchMapping("/{id}/cover")
     public ResponseEntity<Book> updateBookCover(@PathVariable Long id,
-                                                @Valid @RequestBody Map<String, String> body) {
+                                                @RequestBody Map<String, String> body) {
         String coverImageUrl = body.get("coverImageUrl");
         if (coverImageUrl == null) {
             throw new IllegalArgumentException("coverImageUrl 필드는 필수입니다.");
@@ -70,11 +76,37 @@ public class BookController {
         return ResponseEntity.noContent().build();
     }
 
-    // try-catch 대신 getBook() 예외 처리
     @GetMapping("/{id}/related")
     public ResponseEntity<List<Book>> getRelated(@PathVariable Long id) {
-        Book book = bookService.getBook(id);    // getBook 예외 처리
+        Book book = bookService.getBook(id);
         return ResponseEntity.ok(bookService.getRelatedTop3(id, book.getCategory()));
+    }
+
+    @PostMapping("/ai-intro")
+    public ResponseEntity<String> getAiIntro(@RequestBody Map<String, String> body) {
+        try {
+            String title = body.get("title");
+            String author = body.get("author");
+
+            String prompt = String.format(
+                "{\"model\":\"gpt-4o-mini\",\"messages\":[{\"role\":\"user\",\"content\":\"\\\"%s\\\" (%s) 책을 한 문장으로 매력적으로 소개해줘. 30자 이내로.\"}],\"max_tokens\":100}",
+                title, author
+            );
+
+            var request = HttpRequest.newBuilder()
+                    .uri(URI.create("https://api.openai.com/v1/chat/completions"))
+                    .header("Content-Type", "application/json")
+                    .header("Authorization", "Bearer " + openaiApiKey)
+                    .POST(HttpRequest.BodyPublishers.ofString(prompt))
+                    .build();
+
+            HttpResponse<String> response = httpClient.send(request, HttpResponse.BodyHandlers.ofString());
+            return ResponseEntity.status(response.statusCode()).body(response.body());
+        } catch (Exception e) {
+            log.error("AI 소개 생성 오류", e);
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body("{\"error\": {\"message\": \"AI 소개 생성 중 오류가 발생했습니다.\"}}");
+        }
     }
 
     //표지 이미지 생성 기능
@@ -101,5 +133,4 @@ public class BookController {
         }
     }
     */
-    
 }

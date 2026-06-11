@@ -3,21 +3,19 @@ import { useNavigate } from 'react-router-dom';
 import { getBooks } from '../api/books';
 
 function MainPage() {
+  const [aiIntros, setAiIntros] = useState({});
   const [books, setBooks] = useState([]);
   const [slideIndex, setSlideIndex] = useState(0);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
   const navigate = useNavigate();
 
+  // 1. 책 데이터 fetch
   useEffect(() => {
     async function fetchBooks() {
       try {
         const res = await getBooks();
-
-        if (!res.ok) {
-          throw new Error('도서 데이터를 불러오지 못했습니다.');
-        }
-
+        if (!res.ok) throw new Error('도서 데이터를 불러오지 못했습니다.');
         const data = await res.json();
         setBooks(data);
       } catch (err) {
@@ -26,15 +24,13 @@ function MainPage() {
         setLoading(false);
       }
     }
-
     fetchBooks();
   }, []);
 
   const totalReviews = books.reduce((sum, b) => sum + (b.reviewCount || 0), 0);
   const C = books.length > 0 ? totalReviews / books.length : 1;
   const totalRatingSum = books.reduce(
-    (sum, b) => sum + (b.avg_rating || 0) * (b.reviewCount || 0),
-    0
+    (sum, b) => sum + (b.avg_rating || 0) * (b.reviewCount || 0), 0
   );
   const m = totalReviews > 0 ? totalRatingSum / totalReviews : 0;
 
@@ -54,6 +50,30 @@ function MainPage() {
     .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt))
     .slice(0, 5);
 
+  // 2. trendingBooks, recentBooks 선언 후 AI 호출
+  useEffect(() => {
+    if (trendingBooks.length === 0) return;
+
+    const booksToIntro = [trendingBooks[0], trendingBooks[1], recentBooks[0]].filter(Boolean);
+
+    booksToIntro.forEach(async (book) => {
+      if (!book || aiIntros[book.id]) return;
+
+      try {
+        const res = await fetch('http://localhost:8080/books/ai-intro', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ title: book.title, author: book.author }),
+        });
+        const data = await res.json();
+        const intro = data.choices?.[0]?.message?.content ?? '';
+        setAiIntros((prev) => ({ ...prev, [book.id]: intro }));
+      } catch (e) {
+        console.error('AI 소개 호출 실패', e);
+      }
+    });
+  }, [trendingBooks.length, recentBooks.length]);
+
   const bannerSlides = [
     {
       type: 'single',
@@ -70,30 +90,22 @@ function MainPage() {
       book: trendingBooks[1],
     },
     {
-      type: 'multi',
+      type: 'single',
       label: 'NEW UPDATE',
-      title: '신규 도서',
-      author: '새롭게 등록된 도서를 만나보세요',
-      books: recentBooks.slice(0, 3),
+      title: recentBooks[0]?.title,
+      author: recentBooks[0]?.author,
+      book: recentBooks[0],
     },
-  ].filter((slide) =>
-    slide.type === 'single'
-      ? slide.book
-      : slide.books.length > 0
-  );
+  ].filter((slide) => slide.type === 'single' ? slide.book : slide.books.length > 0);
 
   const currentSlide = bannerSlides[slideIndex];
 
   const handlePrevSlide = () => {
-    setSlideIndex((prev) =>
-      prev === 0 ? bannerSlides.length - 1 : prev - 1
-    );
+    setSlideIndex((prev) => prev === 0 ? bannerSlides.length - 1 : prev - 1);
   };
 
   const handleNextSlide = () => {
-    setSlideIndex((prev) =>
-      prev === bannerSlides.length - 1 ? 0 : prev + 1
-    );
+    setSlideIndex((prev) => prev === bannerSlides.length - 1 ? 0 : prev + 1);
   };
 
   if (loading) {
@@ -161,6 +173,7 @@ function MainPage() {
               textAlign: 'left',
               color: 'white',
               zIndex: 1,
+              
             }}
           >
             <p
@@ -174,123 +187,60 @@ function MainPage() {
               {currentSlide.label}
             </p>
 
-            <h2
-              style={{
-                fontSize: '2.1rem',
-                lineHeight: 1.35,
-                fontWeight: 800,
-                marginBottom: 14,
-                maxWidth: 460,
-              }}
-            >
-              {currentSlide.title}
-            </h2>
-
+            {/* 한줄 소개만 크게 */}
             <p
               style={{
-                fontSize: '1.05rem',
-                fontWeight: 600,
-                opacity: 0.92,
+                fontSize: '2rem',
+                fontWeight: 800,
+                lineHeight: 1.4,
+                maxWidth: 460,
+                marginBottom: 0,
               }}
             >
-              {currentSlide.author || '저자 정보 없음'}
+              {aiIntros[currentSlide.book?.id]
+                ? aiIntros[currentSlide.book.id]
+                : '✨ AI 소개 생성 중...'}
             </p>
           </div>
 
-          {currentSlide.type === 'single' ? (
-            <div
-              style={{
-                width: 190,
-                aspectRatio: '2 / 3',
-                borderRadius: 10,
-                overflow: 'hidden',
-                boxShadow: '0 14px 34px rgba(0,0,0,0.28)',
-                background: 'rgba(255,255,255,0.2)',
-                marginRight: 70,
-                flexShrink: 0,
-              }}
-            >
-              {currentSlide.book.coverImageUrl ? (
-                <img
-                  src={currentSlide.book.coverImageUrl}
-                  alt={currentSlide.book.title}
-                  style={{
-                    width: '100%',
-                    height: '100%',
-                    objectFit: 'cover',
-                    display: 'block',
-                  }}
-                />
-              ) : (
-                <div
-                  style={{
-                    width: '100%',
-                    height: '100%',
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    fontSize: '4rem',
-                  }}
-                >
-                  📖
-                </div>
-              )}
-            </div>
-          ) : (
-            <div
-              style={{
-                display: 'flex',
-                gap: 18,
-                marginRight: 60,
-                flexShrink: 0,
-              }}
-            >
-              {currentSlide.books.map((book) => (
-                <div
-                  key={book.id}
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    navigate(`/books/${book.id}`);
-                  }}
-                  style={{
-                    width: 120,
-                    aspectRatio: '2 / 3',
-                    borderRadius: 10,
-                    overflow: 'hidden',
-                    boxShadow: '0 12px 28px rgba(0,0,0,0.24)',
-                    background: 'rgba(255,255,255,0.2)',
-                    cursor: 'pointer',
-                  }}
-                >
-                  {book.coverImageUrl ? (
-                    <img
-                      src={book.coverImageUrl}
-                      alt={book.title}
-                      style={{
-                        width: '100%',
-                        height: '100%',
-                        objectFit: 'cover',
-                        display: 'block',
-                      }}
-                    />
-                  ) : (
-                    <div
-                      style={{
-                        width: '100%',
-                        height: '100%',
-                        display: 'flex',
-                        alignItems: 'center',
-                        justifyContent: 'center',
-                        fontSize: '3rem',
-                      }}
-                    >
-                      📖
-                    </div>
-                  )}
-                </div>
-              ))}
-            </div>
-          )}
+          <div
+            style={{
+              width: 190,
+              aspectRatio: '2 / 3',
+              borderRadius: 10,
+              overflow: 'hidden',
+              boxShadow: '0 14px 34px rgba(0,0,0,0.28)',
+              background: 'rgba(255,255,255,0.2)',
+              marginRight: 70,
+              flexShrink: 0,
+            }}
+          >
+            {currentSlide.book.coverImageUrl ? (
+              <img
+                src={currentSlide.book.coverImageUrl}
+                alt={currentSlide.book.title}
+                style={{
+                  width: '100%',
+                  height: '100%',
+                  objectFit: 'cover',
+                  display: 'block',
+                }}
+              />
+            ) : (
+              <div
+                style={{
+                  width: '100%',
+                  height: '100%',
+                  display: 'flex',
+                  alignItems: 'flex-end',
+                  justifyContent: 'center',
+                  fontSize: '4rem',
+                }}
+              >
+                📖
+              </div>
+            )}
+          </div>
 
           <div
             style={{
@@ -333,6 +283,8 @@ function MainPage() {
         </section>
       )}
 
+
+      {/* 화제작 섹션 */}
       <h3
         style={{
           marginTop: 55,
@@ -398,6 +350,8 @@ function MainPage() {
         ))}
       </div>
 
+
+      {/* 신규 업데이트 섹션 */}
       <h3
         style={{
           marginTop: 55,
