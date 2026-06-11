@@ -215,7 +215,7 @@ git clone [https://github.com/Jiae-Ham/AivleSchool_miniproj4.git](https://github
 
 **2. 백엔드 실행 (Spring Boot)**
 
--💡 데이터베이스 설정 안내
+### 💡 데이터베이스 설정 안내
 본 프로젝트는 현재 별도로 서버에 배포되어 있지 않습니다. 따라서 프로젝트를 직접 실행하고 테스트하실 분들은 개발 및 로컬 환경 전용인 H2 DB(In-memory)로 연결하여 실행하시는 것을 권장합니다.
 
 ※ 만약 Supabase(PostgreSQL)를 사용하시려면, 본인의 Supabase 계정 정보를 .env 파일과 application.yaml에 직접 입력하여 연동해야 합니다.
@@ -225,7 +225,7 @@ git clone [https://github.com/Jiae-Ham/AivleSchool_miniproj4.git](https://github
   ./gradlew build
   ./gradlew bootRun
   ```
-  # H2로 실행할 경우
+  ##### H2로 실행할 경우
   ```bash
    ./gradlew bootRun --args='--spring.profiles.active=h2'
   ```
