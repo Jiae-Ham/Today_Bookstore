@@ -2,11 +2,9 @@ package com.aivle.bookserver.book;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Pattern;
 
 public record BookUpdateRequest(
-        @NotBlank(message = "제목을 입력해주세요.")
         String title,
         String author,
         String content,
