@@ -27,3 +27,11 @@ export const updateBook = (id, data) =>
 
 export const deleteBook = (id) =>
   fetch(`${URL}/${id}`, { method: 'DELETE' });
+
+export const updateBookCover = (id, coverImageUrl) =>
+  fetch(`${URL}/${id}/cover`, {
+    method: 'PATCH',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ coverImageUrl }),
+  });
+

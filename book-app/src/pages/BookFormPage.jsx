@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { getBook, createBook, updateBook } from '../api/books';
+import { getBook, createBook, updateBook, updateBookCover } from '../api/books';
 import { BASE_URL } from '../api/config';
 
 const CATEGORIES = ['000 총류', '100 철학', '200 종교', '300 사회과학', '400 자연과학', '500 기술과학', '600 예술', '700 언어', '800 문학'];
@@ -63,7 +63,7 @@ function BookFormPage() {
     try {
       const prompt = `책의 표지를 그릴 것이다. "${title}"라는 제목을 그림에 반드시 작성해라. 또한, 책의 내용: "${content}" 을(를) 읽고, 해당 책의 내용과 어울리는 표지를 그려라`;
 
-      const OPENAI_IMAGE_API_URL = `${BASE_URL}/books/image/generate`; //리액트가 직접 요청 -> 서버에게 요청으로 변경
+      const OPENAI_IMAGE_API_URL = 'https://api.openai.com/v1/images/generations';
 
       const res = await fetch(OPENAI_IMAGE_API_URL, {
         method: 'POST',
@@ -92,7 +92,15 @@ function BookFormPage() {
       const b64Json = data.data?.[0]?.b64_json;
       const imageSrc = `data:image/png;base64,${b64Json}`;
 
-      setPendingImageUrl(imageSrc);
+      if (isEdit) {
+        const saveRes = await updateBookCover(id, imageSrc);
+        if (!saveRes.ok) throw new Error('데이터베이스 표지 업데이트에 실패했습니다.');
+        setCoverImageUrl(imageSrc);
+        setPendingImageUrl('');
+        alert('AI 표지 생성 및 DB 저장이 완료되었습니다!');
+      } else {
+        setPendingImageUrl(imageSrc);
+      }
 
     } catch (error) {
       console.error(error);
