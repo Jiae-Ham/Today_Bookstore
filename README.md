@@ -226,7 +226,10 @@ git clone [https://github.com/Jiae-Ham/AivleSchool_miniproj4.git](https://github
   ./gradlew build
   ./gradlew bootRun
   ```
-  
+  # H2로 실행할 경우
+  ```bash
+   ./gradlew bootRun --args='--spring.profiles.active=h2'
+  ```
 
 **3. 프론트엔드 실행 (React)**
 
