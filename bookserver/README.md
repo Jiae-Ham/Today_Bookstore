@@ -2,8 +2,6 @@
 
 - 개발 기간: 2026.06.08 ~ 2026.06.12
 
----
-
 ```markdown
 ### 🛠 Tech Stack
 
@@ -27,7 +25,6 @@
     - Validation
     - Lombok, Spring Boot DevTools
 
----
 
 ## 서비스 구조
 
