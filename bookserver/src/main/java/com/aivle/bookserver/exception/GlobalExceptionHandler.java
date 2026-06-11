@@ -8,6 +8,9 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
+import lombok.extern.slf4j.Slf4j;
+
+@Slf4j
 @RestControllerAdvice
 public class GlobalExceptionHandler {
 
@@ -59,4 +62,21 @@ public class GlobalExceptionHandler {
                                 LocalDateTime.now()
                         ));
         }
+
+        // Fallback Handler (예상하지 못한 예외 처리)
+         @ExceptionHandler(Exception.class)
+        public ResponseEntity<ErrorResponse> handleException(Exception e) {
+
+                // 서버 로그 출력
+                log.error("처리되지 않은 예외 발생", e);
+
+                return ResponseEntity
+                        .status(HttpStatus.INTERNAL_SERVER_ERROR)
+                        .body(new ErrorResponse(
+                                500,
+                                "서버 오류가 발생했습니다.",
+                                LocalDateTime.now()
+                        ));
+        }
+
 }
