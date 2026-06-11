@@ -57,17 +57,24 @@
 
 ## 🖥 주요 화면
 
-| 메인 페이지 | 도서 목록 |
-| :---: | :---: |
-| <img src="./book-app/screenshots/메인페이지.png" width="400" alt="메인 페이지"> | <img src="./book-app/screenshots/도서목록페이지.png" width="400" alt="도서 목록"> |
-
-| 도서 상세 | 최신순 정렬 |
-| :---: | :---: |
-| <img src="./book-app/screenshots/도서상세페이지.png" width="400" alt="도서 상세"> | <img src="./book-app/screenshots/도서목록페이지-최신순.png" width="400" alt="도서 목록 최신순"> |
-
-| 도서 등록 | 도서 수정 |
-| :---: | :---: |
-| <img src="./book-app/screenshots/도서등록페이지.png" width="400" alt="도서 등록"> | <img src="./book-app/screenshots/도서수정페이지.png" width="400" alt="도서 수정"> |
+<table width="100%">
+  <tr>
+    <td><img src="./book-app/screenshots/메인페이지.png" height="400" alt="메인 페이지"></td>
+    <td><img src="./book-app/screenshots/도서목록페이지.png" height="400" alt="도서 목록"></td>
+    <td><img src="./book-app/screenshots/도서목록페이지-최신순.png" height="400" alt="도서 목록 최신순"></td>
+    <td><img src="./book-app/screenshots/도서상세페이지.png" height="400" alt="도서 상세"></td>
+    <td><img src="./book-app/screenshots/도서등록페이지.png" height="400" alt="도서 등록"></td>
+    <td><img src="./book-app/screenshots/도서수정페이지.png" height="400" alt="도서 수정"></td>
+  </tr>
+  <tr>
+    <td align="center"><b>메인 페이지</b></td>
+    <td align="center"><b>도서 목록</b></td>
+    <td align="center"><b>도서 목록 (최신순)</b></td>
+    <td align="center"><b>도서 상세</b></td>
+    <td align="center"><b>도서 등록</b></td>
+    <td align="center"><b>도서 수정</b></td>
+  </tr>
+</table>
 
 ---
 
