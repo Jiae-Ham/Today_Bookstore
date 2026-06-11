@@ -46,14 +46,10 @@ public class BookService {
             }
             book.setTitle(req.title());
         }
-        if (req.title()         != null) book.setTitle(req.title());
         if (req.author()        != null) book.setAuthor(req.author());
         if (req.content()       != null) book.setContent(req.content());
         if (req.category()      != null) book.setCategory(req.category());
         if (req.coverImageUrl() != null) book.setCoverImageUrl(req.coverImageUrl());
-        if (req.avgRating()     != null) book.setAvgRating(req.avgRating());
-        if (req.ratePoint()     != null) book.setRatePoint(req.ratePoint());
-        if (req.reviewCount()   != null) book.setReviewCount(req.reviewCount());
         
         return bookRepository.save(book);
     }

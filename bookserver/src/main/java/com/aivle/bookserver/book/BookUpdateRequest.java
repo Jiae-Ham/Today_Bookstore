@@ -33,9 +33,6 @@ public record BookUpdateRequest(
                 .content(this.content)
                 .category(this.category)
                 .coverImageUrl(this.coverImageUrl)
-                .avgRating(0.0)
-                .ratePoint(0.0)
-                .reviewCount(0)
                 .build();
     }
 
