@@ -24,6 +24,8 @@
 ![PostgreSQL](https://img.shields.io/badge/PostgreSQL-336791?style=flat-square&logo=postgresql&logoColor=white)
 ![Supabase](https://img.shields.io/badge/Supabase-3ECF8E?style=flat-square&logo=supabase&logoColor=white)
 
+💡 **DB 설정 안내:** 본 프로젝트의 메인 DB는 Supabase(PostgreSQL)로 구성되어 있습니다. 별도의 Supabase 계정 연동 없이 로컬에서 간편하게 실행하시려면, 백엔드 설정을 개발용 H2 DB(In-memory)로 변경해 주셔야 합니다.
+
 **Tools & External API**<br>
 ![OpenAI](https://img.shields.io/badge/OpenAI%20API-412991?style=flat-square&logo=openai&logoColor=white)
 ![Postman](https://img.shields.io/badge/Postman-FF6C37?style=flat-square&logo=postman&logoColor=white)
@@ -175,7 +177,10 @@ git clone [https://github.com/Jiae-Ham/AivleSchool_miniproj4.git](https://github
 
 **2. 백엔드 실행 (Spring Boot)**
 
-- 프로젝트 최상단 디렉터리에 `.env` 파일을 생성하거나 `application.yaml`을 수정하여 Supabase 연결 정보를 설정합니다. (로컬 테스트 시 H2 DB 사용 가능)
+-💡 데이터베이스 설정 안내
+본 프로젝트는 현재 별도로 서버에 배포되어 있지 않습니다. 따라서 프로젝트를 직접 실행하고 테스트하실 분들은 개발 및 로컬 환경 전용인 H2 DB(In-memory)로 연결하여 실행하시는 것을 권장합니다.
+
+※ 만약 Supabase(PostgreSQL)를 사용하시려면, 본인의 Supabase 계정 정보를 .env 파일과 application.yaml에 직접 입력하여 연동해야 합니다.
   
   ```bash
   cd AivleSchool_miniproj4/bookserver
