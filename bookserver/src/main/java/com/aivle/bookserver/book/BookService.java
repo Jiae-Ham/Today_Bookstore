@@ -81,4 +81,14 @@ public class BookService {
     public List<Book> getRelatedTop3(Long bookId, String category) {
         return bookRepository.findTop3ByCategoryAndIdNotOrderByRatePointDesc(category, bookId);
     }
+
+    // TODO: [임시 구현 - 캐싱 로직] AI 소개 문구를 DB에 캐싱하는 전용 메서드 (팀원 검토 후 수정 가능)
+    @Transactional
+    public Book updateBookAiCopy(Long id, String aiCopy) {
+        Book book = bookRepository.findById(id).orElseThrow(() -> new BookNotFoundException(id));
+        book.setAiCopy(aiCopy);
+        book.setUpdatedAt(LocalDateTime.now());
+        return bookRepository.save(book);
+    }
 }
+

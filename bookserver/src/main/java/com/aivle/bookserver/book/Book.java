@@ -33,6 +33,11 @@ public class Book {
     @Column(columnDefinition = "TEXT")
     private String coverImageUrl;
 
+    // TODO: [임시 구현 - 캐싱 로직] AI가 생성한 한 줄 소개글 캐싱용 컬럼 (팀원 검토 후 수정 가능)
+    @Column(columnDefinition = "TEXT")
+    private String aiCopy;
+
+
     @JsonProperty("avg_rating")
     @Builder.Default
     private Double avgRating = 0.0;

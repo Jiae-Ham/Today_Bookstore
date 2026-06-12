@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { getBooks } from '../api/books';
+import { BASE_URL } from '../api/config';
 
 function MainPage() {
   const [aiIntros, setAiIntros] = useState({});
@@ -60,16 +61,17 @@ function MainPage() {
       if (!book || aiIntros[book.id]) return;
 
       try {
-        const res = await fetch('http://localhost:8080/books/ai-intro', {
+        const res = await fetch(`${BASE_URL}/books/ai-intro`, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ title: book.title, author: book.author }),
+          body: JSON.stringify({ id: book.id, title: book.title, author: book.author }),
         });
         const data = await res.json();
-        const intro = data.choices?.[0]?.message?.content ?? '';
+        const intro = data.choices?.[0]?.message?.content ?? '✨ AI 소개를 불러오지 못했습니다.';
         setAiIntros((prev) => ({ ...prev, [book.id]: intro }));
       } catch (e) {
         console.error('AI 소개 호출 실패', e);
+        setAiIntros((prev) => ({ ...prev, [book.id]: '✨ AI 소개 호출 실패' }));
       }
     });
   }, [trendingBooks.length, recentBooks.length]);
