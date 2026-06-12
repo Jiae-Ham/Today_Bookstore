@@ -192,12 +192,12 @@ $$rate\_point = \text{round}\left(\frac{C \times m + ratingSum}{C + reviewCount}
 </details>
 
 <details>
-<summary><b>2. 서버 내부 정보 노출 방지: Fallback 전역 예외 처리 도입</b></summary>
+<summary><b>2. 전역 예외 처리 고도화: 보안 강화 및 예외 범위 세분화</b></summary>
 <br>
 
-- **문제 상황:** 개발자가 예측하지 못한 서버 에러(DB 제약조건 위배 등) 발생 시, 클라이언트 화면에 서버의 전체 스택 트레이스(Stack Trace)가 노출되는 보안 취약점 발견.
-- **원인 파악:** `GlobalExceptionHandler`에 특정 커스텀 예외들만 등록되어 있어, 지정되지 않은 예외를 최종적으로 잡아내는 방어막(Fallback) 로직이 부재했음.
-- **해결 방안:** 모든 예외를 포괄하는 최상위 `Exception.class` 핸들러를 추가. 에러 상세 로그는 서버 콘솔에만 남기고, 클라이언트에게는 내부 시스템 구조를 숨긴 채 규격화된 `500 Internal Server Error` JSON 형식으로 응답하도록 구조 개선.
+- **문제 상황:** 스택 트레이스 노출을 막기 위해 최상위 `Exception.class` Fallback 핸들러를 도입했으나, `400 Bad Request` 등 클라이언트 측 요청 오류까지 모두 `500 Internal Server Error`로 처리되는 부작용이 발생함. 더불어 도서 생성(POST)과 수정(PATCH) 간 DTO 공유로 인한 검증(Validation) 조건 충돌 문제도 확인됨.
+- **원인 파악:** Fallback 핸들러가 너무 넓은 범위의 예외를 캐치하면서 Spring MVC의 기본 요청 예외까지 가로챘으며, API 요청 목적이 다름에도 동일한 DTO 검증 룰을 일괄 적용했기 때문임.
+- **해결 방안:** 원래 400, 405로 응답해야 하는 Spring MVC 예외들을 `GlobalExceptionHandler`에 개별 핸들러로 명시하여 역할을 세분화함. Fallback 핸들러는 예상치 못한 서버 내부 오류만 처리하도록 축소하고, POST/PATCH 목적에 맞게 검증 로직을 컨트롤러 단으로 분리하여 API의 유연성과 안정성을 동시에 확보함.
 </details>
 
 > 🔗 **더 많은 트러블 슈팅 과정과 기술적 고민은 [팀 프로젝트 노션(트러블 슈팅)](https://app.notion.com/p/37c55c159ec3807b9d13ded76c995b85?source=copy_link)에서 확인하실 수 있습니다.**
