@@ -354,10 +354,39 @@ function BookDetailPage() {
             <h3 style={{ marginBottom: 16 }}>같은 장르 추천 도서 ({book.category})</h3>
             <div className="book-grid">
               {relatedBooks.map((b) => (
-                <div key={b.id} className="book-card" onClick={() => navigate(`/books/${b.id}`)}>
-                  <div className="book-card-cover">
-                    {b.coverImageUrl ? <img src={b.coverImageUrl} alt={b.title} /> : '📖'}
-                  </div>
+                <div
+                  key={b.id}
+                  className="book-card"
+                  onClick={() => navigate(`/books/${b.id}`)}
+                  style={{ overflow: 'hidden' }}
+                >
+                  {b.coverImageUrl ? (
+                    <img
+                      src={b.coverImageUrl}
+                      alt={b.title}
+                      style={{
+                        width: '100%',
+                        aspectRatio: '2 / 3',
+                        objectFit: 'cover',
+                        borderRadius: '16px 16px 0 0',
+                        display: 'block',
+                      }}
+                    />
+                  ) : (
+                    <div
+                      style={{
+                        width: '100%',
+                        aspectRatio: '2 / 3',
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        fontSize: '3rem',
+                      }}
+                    >
+                      📖
+                    </div>
+                  )}
+
                   <div className="book-card-body">
                     <h3>{b.title}</h3>
                     <p>{b.author}</p>
