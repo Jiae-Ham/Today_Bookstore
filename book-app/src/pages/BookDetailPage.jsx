@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { getBook, getBooks, updateBook, deleteBook } from '../api/books';
+import { getBook, getBooks, getRelatedBooks, updateBook, deleteBook } from '../api/books';
 import { getReviews, createReview, deleteReview } from '../api/reviews';
 
 function BookDetailPage() {
@@ -9,6 +9,7 @@ function BookDetailPage() {
   const [book, setBook] = useState(null);
   const [reviews, setReviews] = useState([]);
   const [allBooks, setAllBooks] = useState([]);
+  const [relatedBooks, setRelatedBooks] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
 
@@ -29,15 +30,17 @@ function BookDetailPage() {
   useEffect(() => {
     async function fetchData() {
       try {
-        const [bookRes, reviewRes, allBooksRes] = await Promise.all([
+        const [bookRes, reviewRes, allBooksRes, relatedRes] = await Promise.all([
           getBook(id),
           getReviews(id),
           getBooks(),
+          getRelatedBooks(id),
         ]);
         if (!bookRes.ok) throw new Error('도서를 찾을 수 없습니다.');
         setBook(await bookRes.json());
         setReviews(await reviewRes.json());
         setAllBooks(await allBooksRes.json());
+        setRelatedBooks(await relatedRes.json());
       } catch (err) {
         setError(err.message);
       } finally {
@@ -346,17 +349,11 @@ function BookDetailPage() {
       </div>
 
       {/* 연관 도서 추천 */}
-      {(() => {
-        const related = allBooks
-          .filter((b) => b.category === book.category && b.id !== book.id)
-          .sort((a, b) => b.rate_point - a.rate_point)
-          .slice(0, 3);
-        if (related.length === 0) return null;
-        return (
+      {relatedBooks.length > 0 && (
           <div className="book-detail" style={{ marginTop: 24 }}>
             <h3 style={{ marginBottom: 16 }}>같은 장르 추천 도서 ({book.category})</h3>
             <div className="book-grid">
-              {related.map((b) => (
+              {relatedBooks.map((b) => (
                 <div key={b.id} className="book-card" onClick={() => navigate(`/books/${b.id}`)}>
                   <div className="book-card-cover">
                     {b.coverImageUrl ? <img src={b.coverImageUrl} alt={b.title} /> : '📖'}
@@ -372,8 +369,7 @@ function BookDetailPage() {
               ))}
             </div>
           </div>
-        );
-      })()}
+      )}
     </div>
   );
 }

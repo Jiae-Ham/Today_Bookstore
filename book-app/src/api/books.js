@@ -35,3 +35,6 @@ export const updateBookCover = (id, coverImageUrl) =>
     body: JSON.stringify({ coverImageUrl }),
   });
 
+export const getRelatedBooks = (id) =>
+  fetch(`${URL}/${id}/related`);
+
