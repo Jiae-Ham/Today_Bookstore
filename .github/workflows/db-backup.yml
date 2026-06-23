@@ -31,8 +31,8 @@ jobs:
           mkdir -p backups
           
           # pg_dump를 사용해 Supabase 데이터를 백업합니다.
-          pg_dump -h aws-1-ap-northeast-1.pooler.supabase.com \
-                  -U postgres.jvglpxrqqpnmmqzdfiqj \
+          pg_dump -h aws-1-ap-northeast-2.pooler.supabase.com \
+                  -U postgres.pkyisicmromzdocqxwgc \
                   -d postgres \
                   -F p \
                   -f backups/backup-$(date +%Y%m%d-%H%M%S).sql
